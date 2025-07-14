@@ -1,9 +1,9 @@
-from src.graph_building.interfaces.building_data_interface import BuildingDataInterface
+from src.graph_building.interfaces.graph_data_interface import GraphDataInterface
 
 
 class GraphBuilder:
     """
     This class creates the FWG.
     """
-    def __init__(self, building_data_interface: BuildingDataInterface):
+    def __init__(self, graph_data_interface: GraphDataInterface):
         pass

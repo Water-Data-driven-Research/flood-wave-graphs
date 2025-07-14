@@ -1,4 +1,4 @@
-class BuildingDataInterface:
+class GraphDataInterface:
     """
     Class for storing data created in GraphDataGenerator and used in building the FWG.
     """

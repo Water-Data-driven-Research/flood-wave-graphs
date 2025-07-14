@@ -1,4 +1,4 @@
-from src.data_handling.data_downloader import DataDownloader
+from src.data.data_downloader import DataDownloader
 
 
 class DataLoader:

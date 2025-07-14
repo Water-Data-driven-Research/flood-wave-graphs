@@ -1,5 +1,5 @@
-from src.graph_building.flood_wave_interface import FloodWaveInterface
-from src.graph_building.vertex_data_interface import VertexDataInterface
+from src.graph_building.interfaces.flood_wave_interface import FloodWaveInterface
+from src.graph_building.interfaces.vertex_data_interface import VertexDataInterface
 
 
 class StatisticalAnalyzer:

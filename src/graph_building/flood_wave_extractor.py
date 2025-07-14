@@ -1,4 +1,4 @@
-from src.graph_building.fwg_interface import FWGInterface
+from src.graph_building.interfaces.fwg_interface import FWGInterface
 
 
 class FloodWaveExtractor:

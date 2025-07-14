@@ -1,4 +1,4 @@
-from src.graph_building.building_data_interface import BuildingDataInterface
+from src.graph_building.interfaces.building_data_interface import BuildingDataInterface
 
 
 class GraphBuilder:

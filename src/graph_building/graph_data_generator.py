@@ -1,4 +1,4 @@
-from src.data_handling.data_interface import DataInterface
+from src.data.interfaces.data_interface import DataInterface
 
 
 class GraphDataGenerator:

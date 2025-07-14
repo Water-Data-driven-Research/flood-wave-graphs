@@ -1,4 +1,4 @@
-from src.data_handling.data_loader import DataLoader
+from src.data.data_loader import DataLoader
 
 
 class DataHandler:

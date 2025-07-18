@@ -12,8 +12,8 @@ class DataDownloader:
     def __init__(self, folder_link: str, data_folder_path: str = None):
         """
         Constructor.
-        :param folder_link: the link to the folder in Google Drive
-        :param data_folder_path: the desired path of the data folder
+        :param str folder_link: the link to the folder in Google Drive
+        :param str data_folder_path: the desired path of the data folder
         """
         self.folder_link = folder_link
         self.data_folder_path = data_folder_path

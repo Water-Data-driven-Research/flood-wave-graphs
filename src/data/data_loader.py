@@ -13,7 +13,7 @@ class DataLoader:
     def __init__(self, data_downloader: DataDownloader):
         """
         Constructor.
-        :param data_downloader: a DataDownloader instance
+        :param DataDownloader data_downloader: a DataDownloader instance
         """
         self.data_folder_path = data_downloader.data_folder_path
 

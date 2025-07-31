@@ -16,8 +16,8 @@ class DataInterface:
         - 'station_info'
         """
         self.time_series = pd.DataFrame()
-        self.meta = dict()
-        self.gauges = dict()
+        self.meta = pd.DataFrame()
+        self.gauges = list()
         self.station_info = dict()
 
         if data is not None:

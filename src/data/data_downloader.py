@@ -24,7 +24,7 @@ class DataDownloader:
         if not self.do_all_files_exist():
             self.download_data()
 
-    def download_data(self) -> None:
+    def download_data(self):
         """
         Downloads all data from Google Drive.
         """
@@ -33,7 +33,7 @@ class DataDownloader:
     def do_all_files_exist(self) -> bool:
         """
         This function checks if all files are present in the data folder.
-        :return: True if all files exist, False if at least one does not
+        :return bool: True if all files exist, False if at least one does not
         """
         files = (
             'level_groups.json',

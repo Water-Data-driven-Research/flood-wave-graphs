@@ -20,7 +20,7 @@ class DataHandler:
         """
         self.data_if = DataInterface()
 
-        self.run(data_loader)
+        self.run(data_loader=data_loader)
 
     def run(self, data_loader: DataLoader) -> None:
         """
@@ -33,10 +33,13 @@ class DataHandler:
             'time_series': data_loader.measurement_data,
             'meta': data_loader.meta_data,
             'gauges': gauges,
-            'station_info': self.get_station_info(data_loader, gauges)
+            'station_info': self.get_station_info(
+                data_loader=data_loader,
+                gauges=gauges
+            )
         }
 
-        self.data_if = DataInterface(data)
+        self.data_if = DataInterface(data=data)
 
     @staticmethod
     def get_station_info(data_loader: DataLoader, gauges: list) -> dict:

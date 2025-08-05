@@ -17,6 +17,14 @@ class DataLoader:
         """
         self.data_folder_path = data_downloader.data_folder_path
 
+        self.file_name_dict = {
+            'level_groups_file_name': 'level_groups.json',
+            'measurement_file_name': 'measurement_data.csv',
+            'meta_file_name': 'meta_data.csv',
+            'null_points_file_name': 'null_points.json',
+            'station_lifetimes_file_name': 'station_lifetimes.json'
+        }
+
         self.level_groups = dict()
         self.measurement_data = pd.DataFrame()
         self.meta_data = pd.DataFrame()
@@ -29,35 +37,37 @@ class DataLoader:
         """
         Reads downloaded data, and saves them in member variables.
         """
-        level_groups_file_name = 'level_groups.json'
-        measurement_file_name = 'measurement_data.csv'
-        meta_file_name = 'meta_data.csv'
-        null_points_file_name = 'null_points.json'
-        station_lifetimes_file_name = 'station_lifetimes.json'
+        self.level_groups = self.load_json(
+            file_name=self.file_name_dict['level_groups_file_name']
+        )
 
-        with open(
-                os.path.join(self.data_folder_path, level_groups_file_name)
-        ) as level_groups_file:
-            self.level_groups = json.load(level_groups_file)
-
-        self.measurement_data = pd.read_csv(
-            os.path.join(self.data_folder_path, measurement_file_name),
-            index_col=0,
+        self.measurement_data = self.load_csv(
+            file_name=self.file_name_dict['measurement_file_name'],
             sep=','
         )
 
-        self.meta_data = pd.read_csv(
-            os.path.join(self.data_folder_path, meta_file_name),
-            index_col=0,
+        self.meta_data = self.load_csv(
+            file_name=self.file_name_dict['meta_file_name'],
             sep=';'
         )
 
-        with open(
-                os.path.join(self.data_folder_path, null_points_file_name)
-        ) as null_points_file:
-            self.null_points = json.load(null_points_file)
+        self.null_points = self.load_json(
+            file_name=self.file_name_dict['null_points_file_name']
+        )
 
+        self.station_lifetimes = self.load_json(
+            file_name=self.file_name_dict['station_lifetimes_file_name']
+        )
+
+    def load_json(self, file_name: str) -> dict:
         with open(
-                os.path.join(self.data_folder_path, station_lifetimes_file_name)
-        ) as station_lifetimes_file:
-            self.station_lifetimes = json.load(station_lifetimes_file)
+            os.path.join(self.data_folder_path, file_name)
+        ) as json_file:
+            return json.load(json_file)
+
+    def load_csv(self, file_name: str, sep: str) -> pd.DataFrame:
+        return pd.read_csv(
+            os.path.join(self.data_folder_path, file_name),
+            sep=sep,
+            index_col=0
+        )

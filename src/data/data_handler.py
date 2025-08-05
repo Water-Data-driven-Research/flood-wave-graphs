@@ -22,7 +22,7 @@ class DataHandler:
 
         self.run(data_loader=data_loader)
 
-    def run(self, data_loader: DataLoader) -> None:
+    def run(self, data_loader: DataLoader):
         """
         Run function. Gets all data structures described in the constructor.
         :param DataLoader data_loader: a DataLoader instance

@@ -33,7 +33,7 @@ class DataLoader:
 
         self.load_data()
 
-    def load_data(self) -> None:
+    def load_data(self):
         """
         Reads downloaded data, and saves them in member variables.
         """

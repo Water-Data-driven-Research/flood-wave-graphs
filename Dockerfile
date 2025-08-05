@@ -1,13 +1,21 @@
 # Python image to use.
-FROM python:3.10-slim-buster
+FROM python:3.11-slim
+
+WORKDIR /app
 
 RUN apt-get update
 
-# Update pip
+# Update pip.
 RUN python -m pip install --upgrade pip
 
-# copy the requirements file used for dependencies
+# Copy the requirements file used for dependencies.
 COPY requirements.txt .
 
-# Install any needed packages specified in requirements.txt
+# Install any needed packages specified in requirements.txt.
 RUN pip install -r requirements.txt
+
+# Copy the rest of the working directory contents into the container at /app.
+COPY . .
+
+# Add path to pythonpath.
+ENV PYTHONPATH=/app/

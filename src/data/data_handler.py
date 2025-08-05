@@ -1,5 +1,5 @@
-from src.data.interfaces.data_interface import DataInterface
 from src.data.data_loader import DataLoader
+from src.data.interfaces.data_interface import DataInterface
 
 
 class DataHandler:

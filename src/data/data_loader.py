@@ -60,12 +60,23 @@ class DataLoader:
         )
 
     def load_json(self, file_name: str) -> dict:
+        """
+        We load the JSON file into a dictionary.
+        :param str file_name: the name of the JSON file
+        :return dict: the JSON file as a dictionary
+        """
         with open(
             os.path.join(self.data_folder_path, file_name)
         ) as json_file:
             return json.load(json_file)
 
     def load_csv(self, file_name: str, sep: str) -> pd.DataFrame:
+        """
+        We load the CSV file into a pandas DataFrame.
+        :param str file_name: the name of the CSV file
+        :param str sep: the used seperator character
+        :return pd.DataFrame: the CSV file as a pandas DataFrame
+        """
         return pd.read_csv(
             os.path.join(self.data_folder_path, file_name),
             sep=sep,

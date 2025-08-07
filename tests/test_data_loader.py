@@ -1,46 +1,50 @@
-import json
-import os
-import tempfile
-
 import pandas as pd
 import pytest
 
+from src.data.data_downloader import DataDownloader
 from src.data.data_loader import DataLoader
 
 
 @pytest.fixture
-def tmp_data_loader():
-    tmpdir = tempfile.TemporaryDirectory()
-
-    data_loader = DataLoader.__new__(DataLoader)
-    data_loader.data_folder_path = tmpdir.name
-
-    yield data_loader, tmpdir.name
-
-    tmpdir.cleanup()
-
-
-def test_load_json(tmp_data_loader):
-    data_loader, tmpdir = tmp_data_loader
-    test_dict = {'a': 1, 'b': 2, 'c': 3}
-
-    json_path = os.path.join(tmpdir, 'test.json')
-    with open(json_path, 'w') as f:
-        json.dump(test_dict, f)
-
-    result = data_loader.load_json('test.json')
-    assert result == test_dict
-
-
-def test_load_csv(tmp_data_loader):
-    data_loader, tmpdir = tmp_data_loader
-    test_df = pd.DataFrame(
-        {'col1': [1, 2], 'col2': [3, 4]},
-        index=['row1', 'row2']
+def data_loader():
+    downloader = DataDownloader(
+        "https://drive.google.com/drive/folders/11ZydzGGaMeTih5mG-A-Pm0A2fKafun9W?usp=sharing"
     )
 
-    csv_path = os.path.join(tmpdir, 'test.csv')
-    test_df.to_csv(csv_path, sep=',')
+    loader = DataLoader(downloader)
+    return loader
 
-    result = data_loader.load_csv('test.csv', sep=',')
-    pd.testing.assert_frame_equal(result, test_df)
+
+def test_measurement_data(data_loader):
+    df = data_loader.measurement_data
+
+    assert isinstance(df, pd.DataFrame)
+    assert df.shape == (52595, 23)
+
+
+def test_meta_data(data_loader):
+    df = data_loader.meta_data
+
+    assert isinstance(df, pd.DataFrame)
+    assert df.shape == (22, 4)
+
+
+def test_level_groups(data_loader):
+    level_groups = data_loader.level_groups
+
+    assert isinstance(level_groups, dict)
+    assert len(level_groups) == 22
+
+
+def test_null_points(data_loader):
+    null_points = data_loader.null_points
+
+    assert isinstance(null_points, dict)
+    assert len(null_points) == 22
+
+
+def test_station_lifetimes(data_loader):
+    station_lifetimes = data_loader.station_lifetimes
+
+    assert isinstance(station_lifetimes, dict)
+    assert len(station_lifetimes) == 22

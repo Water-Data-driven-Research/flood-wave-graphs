@@ -19,3 +19,6 @@ COPY . .
 
 # Add path to pythonpath.
 ENV PYTHONPATH=/app/
+
+# Run test when the container launches.
+ENTRYPOINT ["pytest", "tests/test_data_loader.py"]

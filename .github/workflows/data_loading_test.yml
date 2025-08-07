@@ -1,4 +1,4 @@
-name: Docker CI
+name: Flood Wave Graph Analysis Functional Tests
 
 on:
   pull_request_review:

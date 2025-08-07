@@ -19,7 +19,7 @@ def test_measurement_data(data_loader: DataLoader):
     df = data_loader.measurement_data
 
     assert isinstance(df, pd.DataFrame)
-    assert df.shape == (52595, 23)
+    assert df.shape == (52595, 22)
 
 
 def test_meta_data(data_loader: DataLoader):

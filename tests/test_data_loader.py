@@ -8,7 +8,7 @@ from src.data.data_loader import DataLoader
 @pytest.fixture
 def data_loader() -> DataLoader:
     downloader = DataDownloader(
-        folder_link="https://drive.google.com/drive/folders/11ZydzGGaMeTih5mG-A-Pm0A2fKafun9W?usp=sharing"
+        folder_link="https://drive.google.com/drive/folders/12pkrhybv52KpmeNYsHZRSkL9nfF3May2?usp=sharing"
     )
 
     loader = DataLoader(data_downloader=downloader)

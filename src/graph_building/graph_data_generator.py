@@ -77,12 +77,12 @@ class GraphDataGenerator:
         before_max = series.rolling(
             window=self.delta + 1,
             min_periods=self.delta + 1
-        ).max().shift(1)
+        ).max().shift(periods=1)
 
         after_max = series[::-1].rolling(
             window=self.delta + 1,
             min_periods=self.delta + 1
-        ).max().shift(1)[::-1]
+        ).max().shift(periods=1)[::-1]
 
         cond_before = series > before_max
         cond_after = series >= after_max

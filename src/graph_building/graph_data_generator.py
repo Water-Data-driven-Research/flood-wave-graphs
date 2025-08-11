@@ -79,13 +79,13 @@ class GraphDataGenerator:
         series = self.data_interface.time_series.loc[start_date:end_date, gauge]
 
         before_max = series.rolling(
-            window=self.delta+1,
-            min_periods=self.delta+1
+            window=self.delta + 1,
+            min_periods=self.delta + 1
         ).max().shift(1)
 
         after_max = series[::-1].rolling(
-            window=self.delta+1,
-            min_periods=self.delta+1
+            window=self.delta + 1,
+            min_periods=self.delta + 1
         ).max().shift(1)[::-1]
 
         cond_before = series > before_max

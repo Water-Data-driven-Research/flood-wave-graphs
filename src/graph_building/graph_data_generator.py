@@ -53,12 +53,12 @@ class GraphDataGenerator:
 
         self.vertex_interface = VertexDataInterface(data=data)
 
-    def find_vertices(self, gauge: str) -> list:
+    def find_vertices(self, gauge: str) -> dict:
         """
-        We find the potential vertices for a gauge, then return them
-        in the form: (date, null-corrected water level value, color).
+        We find the potential vertices for a gauge, then return them as dictionaries
+        in a dictionary: {'date': {'value': null-corrected water level value, 'color': color}}.
         :param str gauge: the current gauge
-        :return list: list of the potential vertices
+        :return dict: dictionary of potential vertices
         """
         station_info = self.data_interface.station_info
         start_date, end_date = self.find_time_interval(
@@ -92,14 +92,13 @@ class GraphDataGenerator:
         null_point = station_info[gauge]['null_point']
         level_group = station_info[gauge]['level_group']
 
-        peak_data = [
-            [
-                date,
-                round(value + null_point, 2),
-                'yellow' if value < level_group else 'red'
-            ]
+        peak_data = {
+            date: {
+                'value': round(value + null_point, 2),
+                'color': 'yellow' if value < level_group else 'red'
+            }
             for date, value in series[is_peak].items()
-        ]
+        }
 
         return peak_data
 

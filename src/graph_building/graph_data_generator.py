@@ -1,7 +1,6 @@
 import pandas as pd
 
 from src.data.interfaces.data_interface import DataInterface
-from src.graph_building.interfaces.graph_data_interface import GraphDataInterface
 from src.graph_building.interfaces.vertex_data_interface import VertexDataInterface
 
 
@@ -33,10 +32,7 @@ class GraphDataGenerator:
         self.start_date = start_date
         self.end_date = end_date
 
-        self.graph_interface = GraphDataInterface()
         self.vertex_interface = VertexDataInterface()
-
-        self.run()
 
     def run(self):
         """

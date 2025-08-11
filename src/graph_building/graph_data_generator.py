@@ -33,10 +33,7 @@ class GraphDataGenerator:
         self.start_date = start_date
         self.end_date = end_date
 
-        self.graph_interface = GraphDataInterface()
         self.vertex_interface = VertexDataInterface()
-
-        self.run()
 
     def run(self):
         """

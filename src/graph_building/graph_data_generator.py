@@ -72,7 +72,7 @@ class GraphDataGenerator:
             )
         )
 
-        series = self.data_interface.time_series.loc[start_date:end_date, gauge]
+        series = self.data_interface.time_series[gauge].loc[start_date:end_date]
 
         before_max = series.rolling(
             window=self.delta + 1,

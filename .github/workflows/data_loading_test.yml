@@ -1,4 +1,4 @@
-name: Flood Wave Graph Analysis Functional Tests
+name: Data Loading Tests
 
 on:
   pull_request_review:
@@ -20,7 +20,7 @@ jobs:
           lfs: true
 
       - name: Build Docker image
-        run: docker build -t my-app .
+        run: docker build -t my-app -f src/data/tests/Dockerfile_dl_test .
 
       - name: Run tests inside Docker
         run: docker run --rm my-app

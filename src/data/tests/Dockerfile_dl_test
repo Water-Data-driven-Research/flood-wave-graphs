@@ -21,4 +21,4 @@ COPY . .
 ENV PYTHONPATH=/app/
 
 # Run test when the container launches.
-ENTRYPOINT ["pytest", "tests/test_data_loader.py"]
+ENTRYPOINT ["pytest", "src/data/tests/test_data_loader.py"]

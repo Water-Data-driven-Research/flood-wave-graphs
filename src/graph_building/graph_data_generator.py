@@ -83,13 +83,13 @@ class GraphDataGenerator:
         :return pd.Series: found delta-peaks
         """
         before_max = series.rolling(
-            window=self.delta + 1,
-            min_periods=self.delta + 1
+            window=self.delta,
+            min_periods=self.delta
         ).max().shift(periods=1)
 
         after_max = series[::-1].rolling(
-            window=self.delta + 1,
-            min_periods=self.delta + 1
+            window=self.delta,
+            min_periods=self.delta
         ).max().shift(periods=1)[::-1]
 
         cond_before = series > before_max

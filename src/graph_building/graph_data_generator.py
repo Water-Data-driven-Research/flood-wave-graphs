@@ -22,7 +22,6 @@ class GraphDataGenerator:
                           to be considered a peak
         """
         self.data_interface = data_interface
-
         self.beta = beta
         self.delta = delta
 

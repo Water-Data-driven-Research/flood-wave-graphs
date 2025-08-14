@@ -5,9 +5,11 @@ from src.data.interfaces.data_interface import DataInterface
 from src.graph_building.graph_data_generator import GraphDataGenerator
 
 mock_data = {
-    "3.0": [1, 1, 8, 8, 8, None, None, 8, 8, 8],
-    "2.0": [None, None, 5, 1, 1, 5, 1, 1, None, None],
-    "1.0": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    '5.0': [1, 2, 3, 4, 5, 6, 7, 8, 7, 6],
+    '4.0': [1, 2, 3, 4, 5, 4, 3, 4, 3, 2],
+    '3.0': [1, 2, 3, 3, 3, 4, 5, 6, 6, 6],
+    '2.0': [1, 2, 3, 4, 4, 4, 3, 3, 2, 1],
+    '1.0': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 }
 dates = [
     '2020-01-01', '2020-01-02', '2020-01-03', '2020-01-04', '2020-01-05',
@@ -20,34 +22,19 @@ mock_measurements = pd.DataFrame(
 )
 
 mock_meta = pd.DataFrame(
-    data={'river_km': [1.0, 2.0, 3.0]}
+    data={'river_km': list(map(float, mock_data.keys()))}
 )
 
 mock_info = {
-    '3.0': {
+    gauge: {
         'life_interval': {
             'start': dates[0],
             'end': dates[-1]
         },
         'null_point': 10,
-        'level_group': 8
-    },
-    '2.0': {
-        'life_interval': {
-            'start': dates[2],
-            'end': dates[-3]
-        },
-        'null_point': 10,
-        'level_group': 8
-    },
-    '1.0': {
-        'life_interval': {
-            'start': dates[0],
-            'end': dates[-1]
-        },
-        'null_point': 10,
-        'level_group': 8
+        'level_group': 6
     }
+    for gauge in mock_data.keys()
 }
 
 
@@ -56,7 +43,7 @@ def data_interface() -> DataInterface:
     data = {
         'time_series': mock_measurements,
         'meta': mock_meta,
-        'gauges': [3.0, 2.0, 1.0],
+        'gauges': mock_data.keys(),
         'station_info': mock_info
     }
 
@@ -76,24 +63,39 @@ def graph_data_generator(data_interface: DataInterface) -> GraphDataGenerator:
 
 
 def test_delta_peak_detection(graph_data_generator: GraphDataGenerator):
-    vertex_interface = graph_data_generator.vertex_interface
+    vertex_interface = graph_data_generator.delta_peak_finder.vertex_interface
 
     expected_peaks = {
-        '3.0': {
-            '2020-01-03': {
+        '5.0': {
+            '2020.01.08': {
                 'value': 18,
                 'color': 'red'
             }
         },
-        '2.0': {
-            '2020.01.06': {
+        '4.0': {
+            '2020-01-05': {
                 'value': 15,
+                'color': 'yellow'
+            }
+        },
+        '3.0': {
+            '2020-01-03': {
+                'value': 13,
+                'color': 'yellow'
+            },
+            '2020.01.08': {
+                'value': 16,
+                'color': 'red'
+            }
+        },
+        '2.0': {
+            '2020-01-04': {
+                'value': 14,
                 'color': 'yellow'
             }
         },
         '1.0': {}
     }
 
-    assert vertex_interface.vertices['1.0'] == expected_peaks['1.0']
-    assert vertex_interface.vertices['2.0'] == expected_peaks['2.0']
-    assert vertex_interface.vertices['3.0'] == expected_peaks['3.0']
+    for gauge in mock_data.keys():
+        assert vertex_interface.vertices[gauge] == expected_peaks[gauge]

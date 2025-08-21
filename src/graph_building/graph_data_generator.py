@@ -23,14 +23,13 @@ class GraphDataGenerator:
         self.beta = beta
         self.delta = delta
 
-        self.delta_peak_finder = DeltaPeakFinder()
+        self.delta_peak_finder = DeltaPeakFinder(
+            data_interface=self.data_interface,
+            delta=self.delta
+        )
 
     def run(self):
         """
         Runs the operations for finding vertices and edges.
         """
-        self.delta_peak_finder = DeltaPeakFinder(
-            data_interface=self.data_interface,
-            delta=self.delta
-        )
         self.delta_peak_finder.run()

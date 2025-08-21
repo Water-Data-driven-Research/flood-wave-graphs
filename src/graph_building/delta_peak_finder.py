@@ -9,8 +9,8 @@ class DeltaPeakFinder:
     This class is responsible for finding delta-peaks.
     """
     def __init__(self,
-                 data_interface: DataInterface = None,
-                 delta: int = None
+                 data_interface: DataInterface,
+                 delta: int
                  ):
         """
         Constructor.

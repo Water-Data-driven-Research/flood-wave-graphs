@@ -50,52 +50,47 @@ def data_interface() -> DataInterface:
     return DataInterface(data=data)
 
 
-@pytest.fixture
-def graph_data_generator(data_interface: DataInterface) -> GraphDataGenerator:
+@pytest.mark.parametrize("delta, expected_peaks", [
+    (2, {
+        '5.0': {
+            '2020.01.08': {'value': 18, 'color': 'red'}
+        },
+        '4.0': {
+            '2020-01-05': {'value': 15, 'color': 'yellow'}
+        },
+        '3.0': {
+            '2020-01-03': {'value': 13, 'color': 'yellow'},
+            '2020.01.08': {'value': 16, 'color': 'red'}
+        },
+        '2.0': {
+            '2020-01-04': {'value': 14, 'color': 'yellow'}
+        },
+        '1.0': {}
+    }),
+    (3, {
+        '5.0': {},
+        '4.0': {
+            '2020-01-05': {'value': 15, 'color': 'yellow'}
+        },
+        '3.0': {},
+        '2.0': {
+            '2020-01-04': {'value': 14, 'color': 'yellow'}
+        },
+        '1.0': {}
+    })
+])
+def test_delta_peak_detection(data_interface: DataInterface,
+                              delta: int,
+                              expected_peaks: dict
+                              ):
     data_gen = GraphDataGenerator(
         data_interface=data_interface,
         beta=2,
-        delta=2
+        delta=delta
     )
     data_gen.run()
 
-    return data_gen
-
-
-def test_delta_peak_detection(graph_data_generator: GraphDataGenerator):
-    vertex_interface = graph_data_generator.delta_peak_finder.vertex_interface
-
-    expected_peaks = {
-        '5.0': {
-            '2020.01.08': {
-                'value': 18,
-                'color': 'red'
-            }
-        },
-        '4.0': {
-            '2020-01-05': {
-                'value': 15,
-                'color': 'yellow'
-            }
-        },
-        '3.0': {
-            '2020-01-03': {
-                'value': 13,
-                'color': 'yellow'
-            },
-            '2020.01.08': {
-                'value': 16,
-                'color': 'red'
-            }
-        },
-        '2.0': {
-            '2020-01-04': {
-                'value': 14,
-                'color': 'yellow'
-            }
-        },
-        '1.0': {}
-    }
+    vertex_interface = data_gen.delta_peak_finder.vertex_interface
 
     for gauge in mock_data.keys():
         assert vertex_interface.vertices[gauge] == expected_peaks[gauge]

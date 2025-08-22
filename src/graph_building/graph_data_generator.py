@@ -8,7 +8,7 @@ class GraphDataGenerator:
     """
     def __init__(self,
                  data_interface: DataInterface,
-                 beta: int,
+                 beta: int = 2,
                  delta: int = 2
                  ):
         """

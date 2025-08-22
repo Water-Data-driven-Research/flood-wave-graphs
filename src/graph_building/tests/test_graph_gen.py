@@ -85,7 +85,6 @@ def test_delta_peak_detection(data_interface: DataInterface,
                               ):
     data_gen = GraphDataGenerator(
         data_interface=data_interface,
-        beta=2,
         delta=delta
     )
     data_gen.run()

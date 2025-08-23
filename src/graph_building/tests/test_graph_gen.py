@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 
 from src.data.interfaces.data_interface import DataInterface
-from src.graph_building.graph_data_generator import GraphDataGenerator
+from src.graph_building.graph_builder import GraphBuilder
 
 mock_data = {
     '5.0': [1, 2, 3, 4, 5, 6, 7, 8, 7, 6],
@@ -83,7 +83,7 @@ def test_delta_peak_detection(data_interface: DataInterface,
                               delta: int,
                               expected_peaks: dict
                               ):
-    data_gen = GraphDataGenerator(
+    data_gen = GraphBuilder(
         data_interface=data_interface,
         delta=delta
     )

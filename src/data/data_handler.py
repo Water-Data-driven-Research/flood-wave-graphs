@@ -27,7 +27,7 @@ class DataHandler:
         Run function. Gets all data structures described in the constructor.
         :param DataLoader data_loader: a DataLoader instance
         """
-        gauges = data_loader.meta_data.index.tolist()
+        gauges = list(map(str, data_loader.meta_data.index.tolist()))
 
         data = {
             'time_series': data_loader.measurement_data,
@@ -52,12 +52,10 @@ class DataHandler:
         station_info = dict()
 
         for gauge in gauges:
-            reg_number = str(gauge)
-
-            station_info[reg_number] = {
-                "life_interval": data_loader.station_lifetimes.get(reg_number),
-                "null_point": data_loader.null_points.get(reg_number),
-                "level_group": data_loader.level_groups.get(reg_number)
+            station_info[gauge] = {
+                "life_interval": data_loader.station_lifetimes.get(gauge),
+                "null_point": data_loader.null_points.get(gauge),
+                "level_group": data_loader.level_groups.get(gauge)
             }
 
         return station_info

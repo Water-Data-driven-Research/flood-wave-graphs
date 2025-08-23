@@ -2,9 +2,9 @@ from src.data.interfaces.data_interface import DataInterface
 from src.graph_building.delta_peak_finder import DeltaPeakFinder
 
 
-class GraphDataGenerator:
+class GraphBuilder:
     """
-    This class finds all vertices and edges of the FWG.
+    This class builds the FWG.
     """
     def __init__(self,
                  data_interface: DataInterface,
@@ -30,6 +30,6 @@ class GraphDataGenerator:
 
     def run(self):
         """
-        Runs the operations for finding vertices and edges.
+        Runs the operations for building the graph.
         """
         self.delta_peak_finder.run()

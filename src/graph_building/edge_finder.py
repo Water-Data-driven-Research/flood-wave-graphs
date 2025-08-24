@@ -16,8 +16,8 @@ class EdgeFinder:
                  ):
         """
         Constructor.
-        :param list gauges:
-        :param int beta:
+        :param list gauges: list of stations
+        :param int beta: the number of days allowed after a vertex for continuation
         """
         self.gauges = gauges
         self.beta = beta
@@ -26,8 +26,8 @@ class EdgeFinder:
 
     def run(self, vertex_interface: VertexDataInterface):
         """
-
-        :param VertexDataInterface vertex_interface:
+        We take neighboring gauges and find all edges going between them.
+        :param VertexDataInterface vertex_interface: interface with vertices
         """
         edges = dict()
         for upstream, downstream in zip(self.gauges[:-1], self.gauges[1:]):
@@ -43,10 +43,10 @@ class EdgeFinder:
                    downstream_vertices: dict
                    ) -> list:
         """
-
-        :param dict upstream_vertices:
-        :param dict downstream_vertices:
-        :return list:
+        We find the edges between two stations.
+        :param dict upstream_vertices: the vertices of the upstream station
+        :param dict downstream_vertices: the vertices of the downstream station
+        :return list: found edges
         """
         found_edges = list()
 

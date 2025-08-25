@@ -91,5 +91,43 @@ def test_delta_peak_detection(data_interface: DataInterface,
 
     vertex_interface = data_gen.delta_peak_finder.vertex_interface
 
-    for gauge in mock_data.keys():
+    for gauge in data_interface.gauges:
         assert vertex_interface.vertices[gauge] == expected_peaks[gauge]
+
+
+@pytest.mark.parametrize('beta, expected_edges', [
+    (2, {
+        '5.0-4.0': [],
+        '4.0-3.0': [],
+        '3.0-2.0': [
+            ('2020-01-03', '2020-01-04')
+        ],
+        '2.0-1.0': []
+    }),
+    (3, {
+        '5.0-4.0': [],
+        '4.0-3.0': [
+            ('2020-01-05', '2020-01-08')
+        ],
+        '3.0-2.0': [
+            ('2020-01-03', '2020-01-04')
+        ],
+        '2.0-1.0': []
+    })
+])
+def test_edge_finding(data_interface: DataInterface,
+                      beta: int,
+                      expected_edges: dict
+                      ):
+    data_gen = GraphBuilder(
+        data_interface=data_interface,
+        beta=beta
+    )
+    data_gen.run()
+
+    edge_interface = data_gen.edge_finder.edge_interface
+
+    gauges = data_interface.gauges
+    for upstream, downstream in zip(gauges[:-1], gauges[1:]):
+        gauge_pair = f"{upstream}-{downstream}"
+        assert edge_interface.edges[gauge_pair] == expected_edges[gauge_pair]

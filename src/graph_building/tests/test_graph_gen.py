@@ -43,7 +43,7 @@ def data_interface() -> DataInterface:
     data = {
         'time_series': mock_measurements,
         'meta': mock_meta,
-        'gauges': mock_data.keys(),
+        'gauges': list(mock_data.keys()),
         'station_info': mock_info
     }
 

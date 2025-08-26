@@ -62,6 +62,6 @@ class GraphBuilder:
             for start_date, end_date in date_pairs:
                 final_edges.append(((start_gauge, start_date), (end_gauge, end_date)))
 
-        fwg.add_edges_from(final_edges)
+        fwg.add_edges_from(ebunch_to_add=final_edges)
 
         return fwg

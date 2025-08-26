@@ -31,9 +31,12 @@ class EdgeFinder:
         """
         edges = dict()
         for upstream, downstream in zip(self.gauges[:-1], self.gauges[1:]):
+            upstream_vertices = vertex_interface.vertices[upstream]
+            downstream_vertices = vertex_interface.vertices[downstream]
+
             edges[f"{upstream}-{downstream}"] = self.find_edges(
-                upstream_vertices=vertex_interface.vertices[upstream],
-                downstream_vertices=vertex_interface.vertices[downstream]
+                upstream_vertices=upstream_vertices,
+                downstream_vertices=downstream_vertices
             )
 
         self.edge_interface.edges = edges

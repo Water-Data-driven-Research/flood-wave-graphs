@@ -62,7 +62,7 @@ class EdgeFinder:
             cond = (downstream_dates >= up_date) & \
                    (downstream_dates <= up_date + pd.Timedelta(days=self.beta))
 
-            next_dates = downstream_dates.loc[cond]
+            next_dates = downstream_dates[cond]
             new_edges = list(
                 product(
                     [up_date.strftime('%Y-%m-%d')],

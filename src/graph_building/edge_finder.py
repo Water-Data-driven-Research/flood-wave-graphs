@@ -48,8 +48,6 @@ class EdgeFinder:
         :param dict downstream_vertices: the vertices of the downstream station
         :return list: found edges
         """
-        found_edges = list()
-
         upstream_dates = pd.to_datetime(
             list(upstream_vertices.keys()),
             format='ISO8601'
@@ -59,6 +57,7 @@ class EdgeFinder:
             format='ISO8601'
         )
 
+        found_edges = list()
         for up_date in upstream_dates:
             cond = (downstream_dates >= up_date) & \
                    (downstream_dates <= up_date + pd.Timedelta(days=self.beta))

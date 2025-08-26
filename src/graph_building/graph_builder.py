@@ -1,6 +1,5 @@
 import networkx as nx
 
-from src.data.generated_data_loader import GeneratedDataLoader
 from src.data.interfaces.data_interface import DataInterface
 from src.graph_building.delta_peak_finder import DeltaPeakFinder
 from src.graph_building.edge_finder import EdgeFinder
@@ -66,16 +65,3 @@ class GraphBuilder:
         fwg.add_edges_from(final_edges)
 
         return fwg
-
-    def save_graph(self,
-                   data_folder_path: str
-                   ):
-        """
-        We save the FWG as a pickle file.
-        :param str data_folder_path: the path of the data folder
-        """
-        GeneratedDataLoader.save_pickle(
-            folder_path=data_folder_path,
-            file_name='fwg',
-            graph=self.fwg_interface.fwg
-        )

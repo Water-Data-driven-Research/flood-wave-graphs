@@ -5,8 +5,9 @@ class FWGInterface:
     """
     Class used to store the FWG.
     """
-    def __init__(self):
+    def __init__(self, fwg: nx.DiGraph = None):
         """
-        Constructor. The only member variable is the graph instance.
+        Constructor.
+        :param nx.DiGraph fwg: the generated flood wave graph
         """
-        self.fwg = nx.DiGraph()
+        self.fwg = fwg

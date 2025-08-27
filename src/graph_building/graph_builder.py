@@ -45,7 +45,8 @@ class GraphBuilder:
         self.delta_peak_finder.run()
         self.edge_finder.run(vertex_interface=self.delta_peak_finder.vertex_interface)
 
-        self.fwg_interface.fwg = self.build_graph()
+        fwg = self.build_graph()
+        self.fwg_interface = FWGInterface(fwg=fwg)
 
     def build_graph(self) -> nx.DiGraph:
         """

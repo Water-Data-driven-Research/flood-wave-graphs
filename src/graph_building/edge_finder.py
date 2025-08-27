@@ -34,7 +34,7 @@ class EdgeFinder:
             upstream_vertices = vertex_interface.vertices[upstream]
             downstream_vertices = vertex_interface.vertices[downstream]
 
-            edges[f"{upstream}-{downstream}"] = self.find_edges(
+            edges[(upstream, downstream)] = self.find_edges(
                 upstream_vertices=upstream_vertices,
                 downstream_vertices=downstream_vertices
             )

@@ -97,24 +97,24 @@ def test_delta_peak_detection(data_interface: DataInterface,
 
 @pytest.mark.parametrize('beta, expected_edges, expected_graph_data', [
     (2, {
-        '5.0-4.0': [],
-        '4.0-3.0': [],
-        '3.0-2.0': [
+        ('5.0', '4.0'): [],
+        ('4.0', '3.0'): [],
+        ('3.0', '2.0'): [
             ('2020-01-03', '2020-01-04')
         ],
-        '2.0-1.0': []
+        ('2.0', '1.0'): []
     }, [
         (('3.0', '2020-01-03'), ('2.0', '2020-01-04'))
     ]),
     (3, {
-        '5.0-4.0': [],
-        '4.0-3.0': [
+        ('5.0', '4.0'): [],
+        ('4.0', '3.0'): [
             ('2020-01-05', '2020-01-08')
         ],
-        '3.0-2.0': [
+        ('3.0', '2.0'): [
             ('2020-01-03', '2020-01-04')
         ],
-        '2.0-1.0': []
+        ('2.0', '1.0'): []
     }, [
         (('4.0', '2020-01-05'), ('3.0', '2020-01-08')),
         (('3.0', '2020-01-03'), ('2.0', '2020-01-04'))
@@ -135,7 +135,7 @@ def test_edge_finding(data_interface: DataInterface,
 
     gauges = data_interface.gauges
     for upstream, downstream in zip(gauges[:-1], gauges[1:]):
-        gauge_pair = f"{upstream}-{downstream}"
+        gauge_pair = (upstream, downstream)
         assert edge_interface.edges[gauge_pair] == expected_edges[gauge_pair]
 
     fwg = data_gen.fwg_interface.fwg

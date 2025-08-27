@@ -58,8 +58,7 @@ class GraphBuilder:
         edges = self.edge_finder.edge_interface.edges
 
         final_edges = []
-        for gauge_pair, date_pairs in edges.items():
-            start_gauge, end_gauge = gauge_pair.split("-")
+        for (start_gauge, end_gauge), date_pairs in edges.items():
             for start_date, end_date in date_pairs:
                 final_edges.append(((start_gauge, start_date), (end_gauge, end_date)))
 

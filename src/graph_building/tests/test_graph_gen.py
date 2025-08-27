@@ -50,7 +50,7 @@ def data_interface() -> DataInterface:
     return DataInterface(data=data)
 
 
-@pytest.mark.parametrize("delta, expected_peaks", [
+@pytest.mark.parametrize('delta, expected_peaks', [
     (2, {
         '5.0': {
             '2020.01.08': {'value': 18, 'color': 'red'}

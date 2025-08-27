@@ -39,7 +39,7 @@ class EdgeFinder:
                 downstream_vertices=downstream_vertices
             )
 
-        self.edge_interface.edges = edges
+        self.edge_interface = EdgeInterface(edges=edges)
 
     def find_edges(self,
                    upstream_vertices: dict,

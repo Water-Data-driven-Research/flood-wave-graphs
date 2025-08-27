@@ -36,7 +36,7 @@ class GraphBuilder:
             beta=self.beta
         )
 
-        self.fwg_interface = FWGInterface()
+        self.fwg_interface: FWGInterface = None
 
     def run(self):
         """

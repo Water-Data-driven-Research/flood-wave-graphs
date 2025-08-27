@@ -3,6 +3,7 @@ from itertools import product
 import pandas as pd
 
 from src.graph_building.interfaces.edge_interface import EdgeInterface
+from src.graph_building.interfaces.fwg_interface import FWGInterface
 from src.graph_building.interfaces.vertex_data_interface import VertexDataInterface
 
 
@@ -22,7 +23,7 @@ class EdgeFinder:
         self.gauges = gauges
         self.beta = beta
 
-        self.edge_interface = EdgeInterface()
+        self.edge_interface: EdgeInterface = None
 
     def run(self, vertex_interface: VertexDataInterface):
         """

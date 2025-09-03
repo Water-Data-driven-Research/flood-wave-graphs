@@ -32,11 +32,12 @@ class GeneratedDataLoader:
     @staticmethod
     def read_pickle(folder_path: str,
                     file_name: str,
-                    ):
+                    ) -> nx.DiGraph:
         """
-        Method for reading a pickle file.
+        Method for loading a graph from a pickle file.
         :param str folder_path: path of the target folder
         :param str file_name: name of the file
+        :return nx.DiGraph: the loaded graph
         """
         with open(os.path.join(
                 folder_path, f'{file_name}.pkl'

@@ -71,20 +71,10 @@ class FloodWaveExtractor:
         :param list nodes: nodes in the component
         :return list: possible (start node, end node) pairs
         """
-        possible_start_nodes = list()
-        possible_end_nodes = list()
-        for node in nodes:
-            in_degree = self.fwg.in_degree(node)
-            out_degree = self.fwg.out_degree(node)
+        possible_start_nodes = [n for n in nodes if self.fwg.in_degree(n) == 0]
+        possible_end_nodes = [n for n in nodes if self.fwg.out_degree(n) == 0]
 
-            if in_degree == 0:
-                possible_start_nodes.append(node)
-            if out_degree == 0:
-                possible_end_nodes.append(node)
-
-        possible_pairs = list(product(possible_start_nodes, possible_end_nodes))
-
-        return possible_pairs
+        return list(product(possible_start_nodes, possible_end_nodes))
 
     @staticmethod
     def build_wave_graph(flood_waves: list) -> nx.DiGraph:

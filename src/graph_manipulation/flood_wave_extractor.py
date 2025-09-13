@@ -2,7 +2,6 @@ from itertools import product
 
 import networkx as nx
 
-from src.graph_building.interfaces.fwg_interface import FWGInterface
 from src.graph_manipulation.interfaces.flood_wave_interface import FloodWaveInterface
 
 
@@ -10,14 +9,12 @@ class FloodWaveExtractor:
     """
     This class finds all flood waves in the FWG.
     """
-    def __init__(self,
-                 fwg_interface: FWGInterface,
-                 ):
+    def __init__(self, fwg: nx.DiGraph):
         """
         Constructor.
-        :param FWGInterface fwg_interface: interface containing the graph
+        :param nx.DiGraph fwg: the graph to extract flood waves from
         """
-        self.fwg = fwg_interface.fwg
+        self.fwg = fwg
 
         self.flood_wave_interface: FloodWaveInterface = None
 

@@ -2,8 +2,8 @@ from itertools import product
 
 import networkx as nx
 
-from src.graph_building.interfaces.flood_wave_interface import FloodWaveInterface
 from src.graph_building.interfaces.fwg_interface import FWGInterface
+from src.graph_manipulation.interfaces.flood_wave_interface import FloodWaveInterface
 
 
 class FloodWaveExtractor:

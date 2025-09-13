@@ -16,15 +16,21 @@ class FloodWaveExtractor:
         """
         self.fwg = fwg
 
-        self.flood_wave_interface: FloodWaveInterface = None
+        self.flood_wave_interface = FloodWaveInterface()
 
     def __call__(self, with_equivalence: bool):
         """
-        Triggers flood wave extraction.
+        Produces both a list of waves (node lists) for statistics,
+        and a graph object for visualization.
         :param bool with_equivalence: whether to apply equivalence on paths
         """
         flood_waves = self.get_flood_waves(with_equivalence=with_equivalence)
-        self.flood_wave_interface = FloodWaveInterface(flood_waves=flood_waves)
+
+        data = {
+            'flood_waves': flood_waves,
+            'extracted_graph': self.build_wave_graph(flood_waves=flood_waves)
+        }
+        self.flood_wave_interface = FloodWaveInterface(data=data)
 
     def get_flood_waves(self, with_equivalence: bool) -> list:
         """
@@ -79,3 +85,18 @@ class FloodWaveExtractor:
         possible_pairs = list(product(possible_start_nodes, possible_end_nodes))
 
         return possible_pairs
+
+    @staticmethod
+    def build_wave_graph(flood_waves: list) -> nx.DiGraph:
+        """
+        Build a graph object from the extracted waves.
+        :param list flood_waves: extracted waves
+        """
+        extracted_graph = nx.DiGraph()
+        for wave in flood_waves:
+            nx.add_path(
+                G_to_add_to=extracted_graph,
+                nodes_for_path=wave
+            )
+
+        return extracted_graph

@@ -50,14 +50,10 @@ class FloodWaveExtractor:
                             source=start,
                             target=end
                         )
+                        flood_waves.append(wave)
                     else:
-                        wave = nx.all_shortest_paths(
-                            G=self.fwg,
-                            source=start,
-                            target=end
-                        )
-
-                    flood_waves.append(wave)
+                        for wave in nx.all_shortest_paths(self.fwg, source=start, target=end):
+                            flood_waves.append(wave)
                 except nx.NetworkXNoPath:
                     continue
 

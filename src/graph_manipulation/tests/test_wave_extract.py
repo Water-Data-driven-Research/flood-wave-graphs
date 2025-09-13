@@ -39,3 +39,14 @@ def test_wave_extraction(mock_graph: nx.DiGraph,
     expected_sorted = sorted(expected_waves)
 
     assert waves_sorted == expected_sorted
+
+    extracted_graph = extractor.flood_wave_interface.extracted_graph
+
+    expected_graph = nx.DiGraph()
+    for wave in expected_waves:
+        nx.add_path(
+            G_to_add_to=expected_graph,
+            nodes_for_path=wave
+        )
+
+    assert nx.is_isomorphic(extracted_graph, expected_graph)

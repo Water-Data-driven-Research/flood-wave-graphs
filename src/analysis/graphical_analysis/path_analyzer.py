@@ -1,4 +1,4 @@
-from src.graph_building.interfaces.flood_wave_interface import FloodWaveInterface
+from src.graph_manipulation.interfaces.flood_wave_interface import FloodWaveInterface
 
 
 class PathAnalyzer:

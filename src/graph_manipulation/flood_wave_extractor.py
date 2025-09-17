@@ -77,8 +77,8 @@ class FloodWaveExtractor:
         out_nodes = np.array(out_nodes)
         out_values = np.array(out_values)
 
-        possible_start_nodes = in_nodes[in_values == 0].tolist()
-        possible_end_nodes = out_nodes[out_values == 0].tolist()
+        possible_start_nodes = [(str(row[0]), str(row[1])) for row in in_nodes[in_values == 0]]
+        possible_end_nodes = [(str(row[0]), str(row[1])) for row in out_nodes[out_values == 0]]
 
         return list(product(possible_start_nodes, possible_end_nodes))
 

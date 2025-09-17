@@ -1,6 +1,7 @@
 from itertools import product
 
 import networkx as nx
+import numpy as np
 
 from src.graph_manipulation.interfaces.flood_wave_interface import FloodWaveInterface
 
@@ -71,8 +72,19 @@ class FloodWaveExtractor:
         :param list nodes: nodes in the component
         :return list: possible (start node, end node) pairs
         """
-        possible_start_nodes = [n for n in nodes if self.fwg.in_degree(n) == 0]
-        possible_end_nodes = [n for n in nodes if self.fwg.out_degree(n) == 0]
+        in_deg_pairs = list(self.fwg.in_degree(nodes))
+        out_deg_pairs = list(self.fwg.out_degree(nodes))
+
+        in_nodes, in_values = zip(*in_deg_pairs)
+        out_nodes, out_values = zip(*out_deg_pairs)
+
+        in_nodes = np.array(in_nodes)
+        in_values = np.array(in_values)
+        out_nodes = np.array(out_nodes)
+        out_values = np.array(out_values)
+
+        possible_start_nodes = in_nodes[in_values == 0].tolist()
+        possible_end_nodes = out_nodes[out_values == 0].tolist()
 
         return list(product(possible_start_nodes, possible_end_nodes))
 

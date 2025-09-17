@@ -50,12 +50,12 @@ class FloodWaveExtractor:
             possible_pairs = self.get_possible_pairs(nodes=nodes)
 
             if with_equivalence:
-                flood_waves = self.find_waves_with_equivalence(
-                    possible_pairs=possible_pairs
+                flood_waves.extend(
+                    self.find_waves_with_equivalence(possible_pairs=possible_pairs)
                 )
             else:
-                flood_waves = self.find_waves(
-                    possible_pairs=possible_pairs
+                flood_waves.extend(
+                    self.find_waves(possible_pairs=possible_pairs)
                 )
 
         return flood_waves

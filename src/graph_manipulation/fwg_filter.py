@@ -7,8 +7,8 @@ class FWGFilter:
     """
     @staticmethod
     def filter_date_range(fwg: nx.DiGraph,
-                          start_date: str,
-                          end_date: str
+                          start_date: str = None,
+                          end_date: str = None
                           ) -> nx.DiGraph:
         """
         Filters the flood wave graph by date range.
@@ -17,6 +17,14 @@ class FWGFilter:
         :param str end_date: the end date
         :return nx.DiGraph: the filtered flood wave graph
         """
+        if start_date is None:
+            start_date = '1876-01-01'
+        if end_date is None:
+            end_date = '2019-12-31'
+
+        if start_date == '1876-01-01' and end_date == '2019-12-31':
+            return fwg
+
         final_nodes = [
             node for node in fwg.nodes
             if start_date <= node[1] <= end_date
@@ -26,8 +34,8 @@ class FWGFilter:
 
     @staticmethod
     def filter_stations(fwg: nx.DiGraph,
-                        lower_station: float,
-                        upper_station: float
+                        lower_station: float = None,
+                        upper_station: float = None
                         ) -> nx.DiGraph:
         """
         Filters the flood wave graph between two stations.
@@ -36,6 +44,14 @@ class FWGFilter:
         :param float upper_station: the upstream station (river kilometer)
         :return nx.DiGraph: the filtered flood wave graph
         """
+        if lower_station is None:
+            lower_station = 9.8
+        if upper_station is None:
+            upper_station = 744.3
+
+        if lower_station == 9.8 and upper_station == 744.3:
+            return fwg
+
         if upper_station < lower_station:
             raise ValueError('Upper station must be upstream from the lower station')
 

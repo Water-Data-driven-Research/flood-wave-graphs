@@ -31,16 +31,16 @@ def test_wave_extraction(mock_graph: nx.DiGraph,
                          expected_waves: list
                          ):
     extractor = FloodWaveExtractor(fwg=mock_graph)
-    extractor(with_equivalence=with_equivalence)
+    flood_wave_interface = extractor(with_equivalence=with_equivalence)
 
-    waves = extractor.flood_wave_interface.flood_waves
+    waves = flood_wave_interface.flood_waves
 
     waves_sorted = sorted(waves)
     expected_sorted = sorted(expected_waves)
 
     assert waves_sorted == expected_sorted
 
-    extracted_graph = extractor.flood_wave_interface.extracted_graph
+    extracted_graph = flood_wave_interface.extracted_graph
 
     expected_graph = nx.DiGraph()
     for wave in expected_waves:

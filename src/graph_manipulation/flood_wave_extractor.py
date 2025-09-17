@@ -16,13 +16,12 @@ class FloodWaveExtractor:
         """
         self.fwg = fwg
 
-        self.flood_wave_interface = FloodWaveInterface()
-
-    def __call__(self, with_equivalence: bool):
+    def __call__(self, with_equivalence: bool) -> FloodWaveInterface:
         """
         Produces both a list of waves (node lists) for statistics,
         and a graph object for visualization.
         :param bool with_equivalence: whether to apply equivalence on paths
+        :return FloodWaveInterface: interface with extracted flood waves
         """
         flood_waves = self.get_flood_waves(with_equivalence=with_equivalence)
 
@@ -30,7 +29,8 @@ class FloodWaveExtractor:
             'flood_waves': flood_waves,
             'extracted_graph': self.build_wave_graph(flood_waves=flood_waves)
         }
-        self.flood_wave_interface = FloodWaveInterface(data=data)
+
+        return FloodWaveInterface(data=data)
 
     def get_flood_waves(self, with_equivalence: bool) -> list:
         """

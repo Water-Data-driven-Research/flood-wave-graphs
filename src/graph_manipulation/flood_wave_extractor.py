@@ -49,20 +49,14 @@ class FloodWaveExtractor:
             nodes = list(component)
             possible_pairs = self.get_possible_pairs(nodes=nodes)
 
-            for start, end in possible_pairs:
-                try:
-                    if with_equivalence:
-                        wave = nx.shortest_path(
-                            G=self.fwg,
-                            source=start,
-                            target=end
-                        )
-                        flood_waves.append(wave)
-                    else:
-                        for wave in nx.all_shortest_paths(self.fwg, source=start, target=end):
-                            flood_waves.append(wave)
-                except nx.NetworkXNoPath:
-                    continue
+            if with_equivalence:
+                flood_waves = self.find_waves_with_equivalence(
+                    possible_pairs=possible_pairs
+                )
+            else:
+                flood_waves = self.find_waves(
+                    possible_pairs=possible_pairs
+                )
 
         return flood_waves
 
@@ -87,6 +81,42 @@ class FloodWaveExtractor:
         possible_end_nodes = out_nodes[out_values == 0].tolist()
 
         return list(product(possible_start_nodes, possible_end_nodes))
+
+    def find_waves_with_equivalence(self, possible_pairs: list) -> list:
+        """
+        We find waves with equivalence.
+        :param list possible_pairs: possible (start node, end node) pairs
+        :return list: found waves
+        """
+        waves = list()
+        for start, end in possible_pairs:
+            try:
+                wave = nx.shortest_path(
+                    G=self.fwg,
+                    source=start,
+                    target=end
+                )
+                waves.append(wave)
+            except nx.NetworkXNoPath:
+                continue
+
+        return waves
+
+    def find_waves(self, possible_pairs: list) -> list:
+        """
+        We find all waves between start and end nodes.
+        :param list possible_pairs: possible (start node, end node) pairs
+        :return list: found waves
+        """
+        waves = list()
+        for start, end in possible_pairs:
+            try:
+                for wave in nx.all_shortest_paths(G=self.fwg, source=start, target=end):
+                    waves.append(wave)
+            except nx.NetworkXNoPath:
+                continue
+
+        return waves
 
     @staticmethod
     def build_wave_graph(flood_waves: list) -> nx.DiGraph:

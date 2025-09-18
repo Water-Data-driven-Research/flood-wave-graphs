@@ -1,0 +1,26 @@
+name: Flood Wave Extraction Tests
+
+on:
+  pull_request_review:
+    branches:
+      - main
+    types:
+      - submitted
+
+jobs:
+  approved:
+    if: github.event.review.state == 'APPROVED'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          lfs: true
+
+      - name: Build Docker image
+        run: docker build -t my-app -f src/graph_manipulation/tests/Dockerfile_wave_extract_test .
+
+      - name: Run tests inside Docker
+        run: docker run --rm my-app

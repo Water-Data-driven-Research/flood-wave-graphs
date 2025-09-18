@@ -8,10 +8,10 @@ from src.graph_manipulation.flood_wave_extractor import FloodWaveExtractor
 def mock_graph() -> nx.DiGraph:
     graph = nx.DiGraph()
     graph.add_edges_from([
-        ('A', 'B'),
-        ('B', 'D'),
-        ('A', 'C'),
-        ('C', 'D')
+        (('A', '1'), ('B', '2')),
+        (('B', '2'), ('D', '4')),
+        (('A', '1'), ('C', '3')),
+        (('C', '3'), ('D', '4'))
     ])
     return graph
 
@@ -19,11 +19,16 @@ def mock_graph() -> nx.DiGraph:
 @pytest.mark.parametrize('with_equivalence, expected_waves', [
     (
         False,
-        [['A', 'B', 'D'], ['A', 'C', 'D']]
+        [
+            [('A', '1'), ('B', '2'), ('D', '4')],
+            [('A', '1'), ('C', '3'), ('D', '4')]
+        ]
     ),
     (
         True,
-        [['A', 'B', 'D']]
+        [
+            [('A', '1'), ('B', '2'), ('D', '4')]
+        ]
     )
 ])
 def test_wave_extraction(mock_graph: nx.DiGraph,

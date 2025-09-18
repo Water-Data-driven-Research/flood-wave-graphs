@@ -1,3 +1,6 @@
+import json
+import os
+
 import networkx as nx
 
 
@@ -5,8 +8,25 @@ class FWGFilter:
     """
     Class for filtering the flood wave graph.
     """
-    @staticmethod
-    def filter_date_range(fwg: nx.DiGraph,
+    CONFIG_PATH = os.path.join(
+        os.path.dirname(__file__), 'config', 'filter_config.json'
+    )
+    _config = None
+
+    @classmethod
+    def load_config(cls) -> dict:
+        """
+        Loads the filter configuration JSON.
+        :return dict: configuration values
+        """
+        if cls._config is None:
+            with open(cls.CONFIG_PATH) as f:
+                return json.load(f)
+        return cls._config
+
+    @classmethod
+    def filter_date_range(cls,
+                          fwg: nx.DiGraph,
                           start_date: str = None,
                           end_date: str = None
                           ) -> nx.DiGraph:
@@ -17,12 +37,14 @@ class FWGFilter:
         :param str end_date: the end date
         :return nx.DiGraph: the filtered flood wave graph
         """
-        if start_date is None:
-            start_date = '1876-01-01'
-        if end_date is None:
-            end_date = '2019-12-31'
+        config = cls.load_config()
 
-        if start_date == '1876-01-01' and end_date == '2019-12-31':
+        if start_date is None:
+            start_date = config['start_date']
+        if end_date is None:
+            end_date = config['end_date']
+
+        if start_date == config['start_date'] and end_date == config['end_date']:
             return fwg
 
         final_nodes = [
@@ -32,8 +54,9 @@ class FWGFilter:
 
         return nx.DiGraph(fwg.subgraph(nodes=final_nodes))
 
-    @staticmethod
-    def filter_stations(fwg: nx.DiGraph,
+    @classmethod
+    def filter_stations(cls,
+                        fwg: nx.DiGraph,
                         lower_station: float = None,
                         upper_station: float = None
                         ) -> nx.DiGraph:
@@ -44,12 +67,14 @@ class FWGFilter:
         :param float upper_station: the upstream station (river kilometer)
         :return nx.DiGraph: the filtered flood wave graph
         """
-        if lower_station is None:
-            lower_station = 9.8
-        if upper_station is None:
-            upper_station = 744.3
+        config = cls.load_config()
 
-        if lower_station == 9.8 and upper_station == 744.3:
+        if lower_station is None:
+            lower_station = config['lower_station']
+        if upper_station is None:
+            upper_station = config['upper_station']
+
+        if lower_station == config['lower_station'] and upper_station == config['upper_station']:
             return fwg
 
         if upper_station < lower_station:

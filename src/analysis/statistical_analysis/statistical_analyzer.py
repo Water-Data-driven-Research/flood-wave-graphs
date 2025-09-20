@@ -50,11 +50,11 @@ class StatisticalAnalyzer:
 
         return {'yearly': yearly, 'quarterly': quarterly}
 
-    def get_propagation_times(self,
-                              lower_station: float,
-                              upper_station: float,
-                              statistic: str = 'mean'
-                              ) -> dict:
+    def get_propagation_time_stat(self,
+                                  lower_station: float,
+                                  upper_station: float,
+                                  statistic: str = 'mean'
+                                  ) -> dict:
         """
         Calculates selected statistic of wave propagation times
         between two stations, yearly and quarterly.

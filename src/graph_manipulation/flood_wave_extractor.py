@@ -80,7 +80,10 @@ class FloodWaveExtractor:
         possible_start_nodes = [(str(row[0]), str(row[1])) for row in in_nodes[in_values == 0]]
         possible_end_nodes = [(str(row[0]), str(row[1])) for row in out_nodes[out_values == 0]]
 
-        return list(product(possible_start_nodes, possible_end_nodes))
+        return [
+            (start, end) for start, end in product(possible_start_nodes, possible_end_nodes)
+            if start != end
+        ]
 
     def find_waves_with_equivalence(self, possible_pairs: list) -> list:
         """

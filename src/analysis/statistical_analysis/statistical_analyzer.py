@@ -78,6 +78,8 @@ class StatisticalAnalyzer:
             'propagation_time': propagation_times
         }).set_index('date')
 
+        yearly = pd.DataFrame()
+        quarterly = pd.DataFrame()
         match statistic:
             case 'mean':
                 yearly = df.resample('YE').mean()

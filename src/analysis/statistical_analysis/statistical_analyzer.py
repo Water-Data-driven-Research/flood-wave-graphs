@@ -10,14 +10,15 @@ class StatisticalAnalyzer:
     """
     This class calculates and stores data in appropriate format.
     """
-    def __init__(self, flood_wave_interface: FloodWaveInterface, vertex_data_interface: VertexDataInterface):
+    def __init__(self, flood_wave_interface: FloodWaveInterface, vertex_interface: VertexDataInterface):
         """
         Constructor.
-        :param FloodWaveInterface flood_wave_interface:
-        :param VertexDataInterface vertex_data_interface:
+        :param FloodWaveInterface flood_wave_interface: interface containing all
+                                                        flood waves from the whole graph
+        :param VertexDataInterface vertex_interface: interface containing vertex data
         """
         self.flood_wave_interface = flood_wave_interface
-        self.vertex_data_interface = vertex_data_interface
+        self.vertex_interface = vertex_interface
 
     def get_flood_wave_count(self,
                              lower_station: float,

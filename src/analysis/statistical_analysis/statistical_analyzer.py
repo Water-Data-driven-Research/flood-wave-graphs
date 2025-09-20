@@ -1,6 +1,5 @@
 import pandas as pd
 
-from src.graph_building.interfaces.vertex_data_interface import VertexDataInterface
 from src.graph_manipulation.flood_wave_extractor import FloodWaveExtractor
 from src.graph_manipulation.fwg_filter import FWGFilter
 from src.graph_manipulation.interfaces.flood_wave_interface import FloodWaveInterface
@@ -10,15 +9,13 @@ class StatisticalAnalyzer:
     """
     This class calculates and stores data in appropriate format.
     """
-    def __init__(self, flood_wave_interface: FloodWaveInterface, vertex_interface: VertexDataInterface):
+    def __init__(self, flood_wave_interface: FloodWaveInterface):
         """
         Constructor.
         :param FloodWaveInterface flood_wave_interface: interface containing all
                                                         flood waves from the whole graph
-        :param VertexDataInterface vertex_interface: interface containing vertex data
         """
         self.flood_wave_interface = flood_wave_interface
-        self.vertex_interface = vertex_interface
 
     def get_flood_wave_count(self,
                              lower_station: float,

@@ -19,18 +19,21 @@ class StatisticalAnalyzer:
 
     def get_flood_wave_count(self,
                              lower_station: float,
-                             upper_station: float
+                             upper_station: float,
+                             with_equivalence: bool = True
                              ) -> dict:
         """
         Calculates the number of flood waves between two stations,
         yearly and quarterly.
         :param float lower_station: the downstream station (river km)
         :param float upper_station: the upstream station (river km)
+        :param bool with_equivalence: whether to apply equivalence on paths
         :return dict: keys are time interval sizes, values are the respective data
         """
         flood_waves = self.get_filtered_waves(
             lower_station=lower_station,
-            upper_station=upper_station
+            upper_station=upper_station,
+            with_equivalence=with_equivalence
         )
         wave_dates = [wave[0][1] for wave in flood_waves]
 
@@ -50,7 +53,8 @@ class StatisticalAnalyzer:
     def get_propagation_time_stat(self,
                                   lower_station: float,
                                   upper_station: float,
-                                  statistic: str = 'mean'
+                                  statistic: str = 'mean',
+                                  with_equivalence: bool = True
                                   ) -> dict:
         """
         Calculates selected statistic of wave propagation times
@@ -58,11 +62,14 @@ class StatisticalAnalyzer:
         :param float lower_station: the downstream station (river km)
         :param float upper_station: the upstream station (river km)
         :param str statistic: the statistic to calculate
+        :param bool with_equivalence: whether to apply equivalence on paths
         :return dict: keys are time interval sizes, values are the respective data
         """
         flood_waves = self.get_filtered_waves(
             lower_station=lower_station,
             upper_station=upper_station
+            upper_station=upper_station,
+            with_equivalence=with_equivalence
         )
 
         propagation_times = list()
@@ -97,12 +104,14 @@ class StatisticalAnalyzer:
 
     def get_filtered_waves(self,
                            lower_station: float,
-                           upper_station: float
+                           upper_station: float,
+                           with_equivalence: bool = True
                            ) -> list:
         """
         Finds flood waves between two stations.
         :param float lower_station: the downstream station (river km)
         :param float upper_station: the upstream station (river km)
+        :param bool with_equivalence: whether to apply equivalence on paths
         :return list: list of filtered waves
         """
         whole_graph = self.flood_wave_interface.extracted_graph
@@ -113,6 +122,6 @@ class StatisticalAnalyzer:
         )
 
         extractor = FloodWaveExtractor(fwg=graph_section)
-        flood_waves = extractor(with_equivalence=True).flood_waves
+        flood_waves = extractor(with_equivalence=with_equivalence).flood_waves
 
         return flood_waves

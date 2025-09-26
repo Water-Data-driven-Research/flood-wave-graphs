@@ -84,17 +84,11 @@ class StatisticalAnalyzer:
             'propagation_time': propagation_times
         }).set_index('date')
 
-        yearly = pd.DataFrame()
-        quarterly = pd.DataFrame()
-        match statistic:
-            case 'mean':
-                yearly = df.resample('YE').mean()
-                quarterly = df.resample('QE').mean()
-            case 'median':
-                yearly = df.resample('YE').median()
-                quarterly = df.resample('QE').median()
-            case _:
-                raise ValueError('Invalid statistic')
+        try:
+            yearly = getattr(df.resample('YE'), statistic)()
+            quarterly = getattr(df.resample('QE'), statistic)()
+        except AttributeError:
+            raise ValueError('Invalid statistic')
 
         yearly.index = yearly.index.to_period('Y')
         quarterly.index = quarterly.index.to_period('Q')

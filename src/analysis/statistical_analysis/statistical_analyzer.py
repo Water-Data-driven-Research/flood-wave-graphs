@@ -1,7 +1,6 @@
 import pandas as pd
 
-from src.graph_manipulation.flood_wave_extractor import FloodWaveExtractor
-from src.graph_manipulation.fwg_filter import FWGFilter
+from src.graph_manipulation.flood_wave_utils import FloodWaveUtils
 from src.graph_manipulation.interfaces.flood_wave_interface import FloodWaveInterface
 
 
@@ -30,7 +29,9 @@ class StatisticalAnalyzer:
         :param bool with_equivalence: whether to apply equivalence on paths
         :return dict: keys are time interval sizes, values are the respective data
         """
-        flood_waves = self.get_filtered_waves(
+        extracted_graph = self.flood_wave_interface.extracted_graph
+        flood_waves = FloodWaveUtils.get_filtered_waves(
+            extracted_graph=extracted_graph,
             lower_station=lower_station,
             upper_station=upper_station,
             with_equivalence=with_equivalence
@@ -65,7 +66,9 @@ class StatisticalAnalyzer:
         :param bool with_equivalence: whether to apply equivalence on paths
         :return dict: keys are time interval sizes, values are the respective data
         """
-        flood_waves = self.get_filtered_waves(
+        extracted_graph = self.flood_wave_interface.extracted_graph
+        flood_waves = FloodWaveUtils.get_filtered_waves(
+            extracted_graph=extracted_graph,
             lower_station=lower_station,
             upper_station=upper_station,
             with_equivalence=with_equivalence
@@ -96,27 +99,3 @@ class StatisticalAnalyzer:
         quarterly.index = quarterly.index.to_period('Q')
 
         return {'yearly': yearly, 'quarterly': quarterly}
-
-    def get_filtered_waves(self,
-                           lower_station: float,
-                           upper_station: float,
-                           with_equivalence: bool = True
-                           ) -> list:
-        """
-        Finds flood waves between two stations.
-        :param float lower_station: the downstream station (river km)
-        :param float upper_station: the upstream station (river km)
-        :param bool with_equivalence: whether to apply equivalence on paths
-        :return list: list of filtered waves
-        """
-        whole_graph = self.flood_wave_interface.extracted_graph
-        graph_section = FWGFilter.filter_stations(
-            fwg=whole_graph,
-            lower_station=lower_station,
-            upper_station=upper_station
-        )
-
-        extractor = FloodWaveExtractor(fwg=graph_section)
-        flood_waves = extractor(with_equivalence=with_equivalence).flood_waves
-
-        return flood_waves

@@ -71,13 +71,15 @@ class StatisticalAnalyzer:
             with_equivalence=with_equivalence
         )
 
-        propagation_times = list()
-        start_dates = list()
-        for wave in flood_waves:
-            start_date = pd.to_datetime(wave[0][1])
-            end_date = pd.to_datetime(wave[-1][1])
-            start_dates.append(start_date)
-            propagation_times.append((end_date - start_date).days)
+        start_dates, propagation_times = zip(
+            *map(
+                lambda wave: (
+                    pd.to_datetime(wave[0][1]),
+                    (pd.to_datetime(wave[-1][1]) - pd.to_datetime(wave[0][1])).days
+                ),
+                flood_waves
+            )
+        )
 
         df = pd.DataFrame({
             'date': start_dates,

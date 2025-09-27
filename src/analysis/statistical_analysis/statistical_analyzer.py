@@ -17,8 +17,8 @@ class StatisticalAnalyzer:
         self.flood_wave_interface = flood_wave_interface
 
     def get_flood_wave_count(self,
-                             lower_station: float,
-                             upper_station: float,
+                             lower_station: float = None,
+                             upper_station: float = None,
                              with_equivalence: bool = True
                              ) -> dict:
         """
@@ -52,8 +52,8 @@ class StatisticalAnalyzer:
         return {'yearly': yearly, 'quarterly': quarterly}
 
     def get_propagation_time_stat(self,
-                                  lower_station: float,
-                                  upper_station: float,
+                                  lower_station: float = None,
+                                  upper_station: float = None,
                                   statistic: str = 'mean',
                                   with_equivalence: bool = True
                                   ) -> dict:

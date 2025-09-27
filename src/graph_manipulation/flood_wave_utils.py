@@ -10,8 +10,8 @@ class FloodWaveUtils:
     """
     @staticmethod
     def get_filtered_waves(extracted_graph: nx.DiGraph,
-                           lower_station: float,
-                           upper_station: float,
+                           lower_station: float = None,
+                           upper_station: float = None,
                            with_equivalence: bool = True
                            ) -> list:
         """

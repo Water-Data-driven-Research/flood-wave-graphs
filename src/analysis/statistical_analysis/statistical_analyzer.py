@@ -40,7 +40,7 @@ class StatisticalAnalyzer:
 
         df = pd.DataFrame({
             'date': pd.to_datetime(wave_dates),
-            'count': 1
+            'flood wave count': 1
         }).set_index('date')
 
         yearly = df.resample('YE').sum()
@@ -86,7 +86,7 @@ class StatisticalAnalyzer:
 
         df = pd.DataFrame({
             'date': start_dates,
-            'propagation_time': propagation_times
+            f'{statistic} propagation time': propagation_times
         }).set_index('date')
 
         try:

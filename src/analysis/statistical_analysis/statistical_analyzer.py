@@ -1,6 +1,6 @@
 import pandas as pd
 
-from src.graph_manipulation.flood_wave_utils import FloodWaveUtils
+from src.graph_manipulation.flood_wave_filter import FloodWaveFilter
 from src.graph_manipulation.interfaces.flood_wave_interface import FloodWaveInterface
 
 
@@ -30,7 +30,7 @@ class StatisticalAnalyzer:
         :return dict: keys are time interval sizes, values are the respective data
         """
         extracted_graph = self.flood_wave_interface.extracted_graph
-        flood_waves = FloodWaveUtils.get_filtered_waves(
+        flood_waves = FloodWaveFilter.get_filtered_waves(
             extracted_graph=extracted_graph,
             lower_station=lower_station,
             upper_station=upper_station,
@@ -67,7 +67,7 @@ class StatisticalAnalyzer:
         :return dict: keys are time interval sizes, values are the respective data
         """
         extracted_graph = self.flood_wave_interface.extracted_graph
-        flood_waves = FloodWaveUtils.get_filtered_waves(
+        flood_waves = FloodWaveFilter.get_filtered_waves(
             extracted_graph=extracted_graph,
             lower_station=lower_station,
             upper_station=upper_station,

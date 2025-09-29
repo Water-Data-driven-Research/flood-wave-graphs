@@ -4,7 +4,7 @@ from src.graph_manipulation.flood_wave_extractor import FloodWaveExtractor
 from src.graph_manipulation.fwg_filter import FWGFilter
 
 
-class FloodWaveUtils:
+class FloodWaveFilter:
     """
     Class used to prepare flood waves for analysis.
     """

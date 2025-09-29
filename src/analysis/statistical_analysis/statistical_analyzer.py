@@ -74,15 +74,12 @@ class StatisticalAnalyzer:
             with_equivalence=with_equivalence
         )
 
-        start_dates, propagation_times = zip(
-            *map(
-                lambda wave: (
-                    pd.to_datetime(wave[0][1]),
-                    (pd.to_datetime(wave[-1][1]) - pd.to_datetime(wave[0][1])).days
-                ),
+        start_dates, propagation_times = zip(*map(
+            lambda wave:
+                (pd.to_datetime(wave[0][1]),
+                 (pd.to_datetime(wave[-1][1]) - pd.to_datetime(wave[0][1])).days),
                 flood_waves
-            )
-        )
+        ))
 
         df = pd.DataFrame({
             'date': start_dates,

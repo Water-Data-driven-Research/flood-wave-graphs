@@ -22,26 +22,14 @@ class StatisticalAnalyzer:
         self.flood_wave_interface = flood_wave_interface
         self.vertex_interface = vertex_interface
 
-    def get_flood_wave_count(self,
-                             lower_station: float = None,
-                             upper_station: float = None,
-                             with_equivalence: bool = True
-                             ) -> dict:
+    @staticmethod
+    def get_flood_wave_count(flood_waves: list) -> dict:
         """
-        Calculates the number of flood waves between two stations,
-        yearly and quarterly.
-        :param float lower_station: the downstream station (river km)
-        :param float upper_station: the upstream station (river km)
-        :param bool with_equivalence: whether to apply equivalence on paths
+        Calculates the number of flood waves from a given list,
+        aggregated yearly and quarterly.
+        :param list flood_waves: list of flood waves to analyze
         :return dict: keys are time interval sizes, values are the respective data
         """
-        extracted_graph = self.flood_wave_interface.extracted_graph
-        flood_waves = FloodWaveFilter.get_filtered_waves(
-            extracted_graph=extracted_graph,
-            lower_station=lower_station,
-            upper_station=upper_station,
-            with_equivalence=with_equivalence
-        )
         wave_dates = [wave[0][1] for wave in flood_waves]
 
         df = pd.DataFrame({
@@ -57,29 +45,15 @@ class StatisticalAnalyzer:
 
         return {'yearly': yearly, 'quarterly': quarterly}
 
-    def get_propagation_time_stat(self,
-                                  lower_station: float = None,
-                                  upper_station: float = None,
-                                  statistic: str = 'mean',
-                                  with_equivalence: bool = True
-                                  ) -> dict:
+    @staticmethod
+    def get_propagation_time_stat(flood_waves: list, statistic: str = 'mean') -> dict:
         """
-        Calculates selected statistic of wave propagation times
-        between two stations, yearly and quarterly.
-        :param float lower_station: the downstream station (river km)
-        :param float upper_station: the upstream station (river km)
-        :param str statistic: the statistic to calculate
-        :param bool with_equivalence: whether to apply equivalence on paths
+        Calculates selected statistic of wave propagation times from a given list,
+        aggregated yearly and quarterly.
+        :param list flood_waves: list of flood waves to analyze
+        :param str statistic: the statistic to calculate (mean, median, etc.)
         :return dict: keys are time interval sizes, values are the respective data
         """
-        extracted_graph = self.flood_wave_interface.extracted_graph
-        flood_waves = FloodWaveFilter.get_filtered_waves(
-            extracted_graph=extracted_graph,
-            lower_station=lower_station,
-            upper_station=upper_station,
-            with_equivalence=with_equivalence
-        )
-
         start_dates, propagation_times = zip(*map(
             lambda wave:
                 (pd.to_datetime(wave[0][1]),
@@ -97,6 +71,55 @@ class StatisticalAnalyzer:
             quarterly = getattr(df.resample('QE'), statistic)()
         except AttributeError:
             raise ValueError('Invalid statistic')
+
+        yearly.index = yearly.index.to_period('Y')
+        quarterly.index = quarterly.index.to_period('Q')
+
+        return {'yearly': yearly, 'quarterly': quarterly}
+
+    def get_flood_wave_count_between_stations(self,
+                                              lower_station: float = None,
+                                              upper_station: float = None,
+                                              with_equivalence: bool = True
+                                              ) -> dict:
+        """
+        Calculates the number of flood waves between two stations,
+        yearly and quarterly.
+        :param float lower_station: the downstream station (river km)
+        :param float upper_station: the upstream station (river km)
+        :param bool with_equivalence: whether to apply equivalence on paths
+        :return dict: keys are time interval sizes, values are the respective data
+        """
+        flood_waves = FloodWaveFilter.get_filtered_waves(
+            extracted_graph=self.flood_wave_interface.extracted_graph,
+            lower_station=lower_station,
+            upper_station=upper_station,
+            with_equivalence=with_equivalence
+        )
+        return self.get_flood_wave_count(flood_waves)
+
+    def get_propagation_time_stat_between_stations(self,
+                                                   lower_station: float = None,
+                                                   upper_station: float = None,
+                                                   statistic: str = 'mean',
+                                                   with_equivalence: bool = True
+                                                   ) -> dict:
+        """
+        Calculates selected statistic of wave propagation times
+        between two stations, yearly and quarterly.
+        :param float lower_station: the downstream station (river km)
+        :param float upper_station: the upstream station (river km)
+        :param str statistic: the statistic to calculate
+        :param bool with_equivalence: whether to apply equivalence on paths
+        :return dict: keys are time interval sizes, values are the respective data
+        """
+        flood_waves = FloodWaveFilter.get_filtered_waves(
+            extracted_graph=self.flood_wave_interface.extracted_graph,
+            lower_station=lower_station,
+            upper_station=upper_station,
+            with_equivalence=with_equivalence
+        )
+        return self.get_propagation_time_stat(flood_waves, statistic=statistic)
 
         yearly.index = yearly.index.to_period('Y')
         quarterly.index = quarterly.index.to_period('Q')

@@ -121,7 +121,25 @@ class StatisticalAnalyzer:
         )
         return self.get_propagation_time_stat(flood_waves, statistic=statistic)
 
-        yearly.index = yearly.index.to_period('Y')
-        quarterly.index = quarterly.index.to_period('Q')
-
-        return {'yearly': yearly, 'quarterly': quarterly}
+    def get_red_wave_count_at_station(self,
+                                      flood_waves: list,
+                                      target_station: float,
+                                      check_whole_wave: bool = False
+                                      ) -> dict:
+        """
+        Calculates the number of flood waves that impacted the target station
+        while having high water levels either at the target station or in the whole wave,
+        aggregated yearly and quarterly.
+        :param list flood_waves: list of flood waves to analyze
+        :param float target_station: the station to filter for
+        :param bool check_whole_wave: True if we require all nodes in the wave to be red,
+                                      False if we only consider the one at the target station
+        :return dict: keys are time interval sizes, values are the respective data
+        """
+        red_waves = FloodWaveFilter.get_red_waves(
+            flood_waves=flood_waves,
+            vertex_interface=self.vertex_interface,
+            target_station=str(target_station),
+            check_whole_wave=check_whole_wave
+        )
+        return self.get_flood_wave_count(red_waves)

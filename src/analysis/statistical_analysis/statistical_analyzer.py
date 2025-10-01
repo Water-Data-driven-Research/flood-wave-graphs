@@ -127,9 +127,10 @@ class StatisticalAnalyzer:
                                       check_whole_wave: bool = False
                                       ) -> dict:
         """
-        Calculates the number of flood waves that impacted the target station
-        while having high water levels either at the target station or in the whole wave,
-        aggregated yearly and quarterly.
+        Calculates the number of red waves that impacted the target station.
+        A flood wave is considered red if it had a high water level at
+        the target station (or throughout).
+        Data is aggregated yearly and quarterly.
         :param list flood_waves: list of flood waves to analyze
         :param float target_station: the station to filter for
         :param bool check_whole_wave: True if we require all nodes in the wave to be red,

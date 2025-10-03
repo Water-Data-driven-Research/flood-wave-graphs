@@ -1,13 +1,15 @@
+import networkx as nx
 import pandas as pd
 
 from src.graph_building.interfaces.vertex_data_interface import VertexDataInterface
 from src.graph_manipulation.flood_wave_filter import FloodWaveFilter
+from src.graph_manipulation.fwg_filter import FWGFilter
 from src.graph_manipulation.interfaces.flood_wave_interface import FloodWaveInterface
 
 
 class StatisticalAnalyzer:
     """
-    This class calculates and stores data in appropriate format.
+    This class is responsible for the statistical analysis of graph (and flood wave) data.
     """
     def __init__(self,
                  flood_wave_interface: FloodWaveInterface,
@@ -170,3 +172,64 @@ class StatisticalAnalyzer:
             is_full_wave_considered=is_full_wave_considered
         )
         return self.get_propagation_time_stat(red_waves, statistic=statistic)
+
+    @staticmethod
+    def get_slope_distribution(fwg: nx.DiGraph) -> dict:
+        """
+        Count the ratio of edges with positive/zero/negative slopes.
+        :param nx.DiGraph fwg: the flood wave graph to analyze
+        :return dict: ratios {'positive': x, 'zero': y, 'negative': z}
+        """
+        slopes = list()
+        for u, v, data in fwg.edges(data=True):
+            slopes.append(data.get('slope'))
+
+        if not slopes:
+            return {'positive': 0, 'zero': 0, 'negative': 0}
+
+        total = len(slopes)
+        return {
+            'positive': sum(1 for s in slopes if s > 0) / total,
+            'zero': sum(1 for s in slopes if s == 0) / total,
+            'negative': sum(1 for s in slopes if s < 0) / total
+        }
+
+    @staticmethod
+    def get_slope_error_ratios_between_stations(fwg: nx.DiGraph,
+                                                lower_station: float,
+                                                upper_station: float
+                                                ) -> dict:
+        """
+        For a station pair, compute error ratios (zero/negative slope)
+        yearly and quarterly.
+        :param nx.DiGraph fwg: the flood wave graph to analyze
+        :param float lower_station: the downstream station
+        :param float upper_station: the upstream station
+        :return dict: keys are time interval sizes, values are the respective data
+        """
+        filtered_graph = FWGFilter.filter_stations(
+            fwg=fwg,
+            lower_station=lower_station,
+            upper_station=upper_station
+        )
+
+        records = list()
+        for u, v, data in filtered_graph.edges(data=True):
+            start_date = u[1]
+            slope = data.get('slope')
+
+            records.append({
+                'date': pd.to_datetime(start_date),
+                'slope': slope
+            })
+
+        df = pd.DataFrame(records).set_index('date')
+        df['is_error'] = df['slope'] <= 0
+
+        yearly = df.resample('YE')['is_error'].mean().to_frame(name='error ratio')
+        yearly.index = yearly.index.to_period('Y')
+
+        quarterly = df.resample('QE')['is_error'].mean().to_frame(name='error ratio')
+        quarterly.index = quarterly.index.to_period('Q')
+
+        return {'yearly': yearly, 'quarterly': quarterly}

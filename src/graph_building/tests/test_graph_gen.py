@@ -100,24 +100,24 @@ def test_delta_peak_detection(data_interface: DataInterface,
         ('5.0', '4.0'): [],
         ('4.0', '3.0'): [],
         ('3.0', '2.0'): [
-            ('2020-01-03', '2020-01-04')
+            (('2020-01-03', '2020-01-04'), -1.0)
         ],
         ('2.0', '1.0'): []
     }, [
-        (('3.0', '2020-01-03'), ('2.0', '2020-01-04'))
+        (('3.0', '2020-01-03'), ('2.0', '2020-01-04'), {'slope': -1.0})
     ]),
     (3, {
         ('5.0', '4.0'): [],
         ('4.0', '3.0'): [
-            ('2020-01-05', '2020-01-08')
+            (('2020-01-05', '2020-01-08'), -1.0)
         ],
         ('3.0', '2.0'): [
-            ('2020-01-03', '2020-01-04')
+            (('2020-01-03', '2020-01-04'), -1.0)
         ],
         ('2.0', '1.0'): []
     }, [
-        (('4.0', '2020-01-05'), ('3.0', '2020-01-08')),
-        (('3.0', '2020-01-03'), ('2.0', '2020-01-04'))
+        (('4.0', '2020-01-05'), ('3.0', '2020-01-08'), {'slope': -1.0}),
+        (('3.0', '2020-01-03'), ('2.0', '2020-01-04'), {'slope': -1.0})
     ])
 ])
 def test_edge_finding(data_interface: DataInterface,
@@ -139,4 +139,4 @@ def test_edge_finding(data_interface: DataInterface,
         assert edge_interface.edges[gauge_pair] == expected_edges[gauge_pair]
 
     fwg = data_gen.fwg_interface.fwg
-    assert list(fwg.edges) == expected_graph_data
+    assert list(fwg.edges(data=True)) == expected_graph_data

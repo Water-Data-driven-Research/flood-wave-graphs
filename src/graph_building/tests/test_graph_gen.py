@@ -13,7 +13,7 @@ mock_data = {
 }
 dates = [
     '2020-01-01', '2020-01-02', '2020-01-03', '2020-01-04', '2020-01-05',
-    '2020.01.06', '2020.01.07', '2020.01.08', '2020.01.09', '2020.01.10'
+    '2020-01-06', '2020-01-07', '2020-01-08', '2020-01-09', '2020-01-10'
 ]
 
 mock_measurements = pd.DataFrame(
@@ -53,14 +53,14 @@ def data_interface() -> DataInterface:
 @pytest.mark.parametrize('delta, expected_peaks', [
     (2, {
         '5.0': {
-            '2020.01.08': {'value': 18, 'color': 'red'}
+            '2020-01-08': {'value': 18, 'color': 'red'}
         },
         '4.0': {
             '2020-01-05': {'value': 15, 'color': 'yellow'}
         },
         '3.0': {
             '2020-01-03': {'value': 13, 'color': 'yellow'},
-            '2020.01.08': {'value': 16, 'color': 'red'}
+            '2020-01-08': {'value': 16, 'color': 'red'}
         },
         '2.0': {
             '2020-01-04': {'value': 14, 'color': 'yellow'}

@@ -1,3 +1,5 @@
+import pandas as pd
+
 from src.data.data_loader import DataLoader
 from src.data.interfaces.data_interface import DataInterface
 
@@ -29,8 +31,12 @@ class DataHandler:
         """
         gauges = list(map(str, data_loader.meta_data.index.tolist()))
 
+        time_series = data_loader.measurement_data
+        time_series.index = pd.to_datetime(time_series.index, format='ISO8601')
+        time_series.index = time_series.index.strftime('%Y-%m-%d')
+
         data = {
-            'time_series': data_loader.measurement_data,
+            'time_series': time_series,
             'meta': data_loader.meta_data,
             'gauges': gauges,
             'station_info': self.get_station_info(

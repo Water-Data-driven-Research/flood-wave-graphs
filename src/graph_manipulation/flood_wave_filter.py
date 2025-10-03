@@ -54,16 +54,18 @@ class FloodWaveFilter:
         vertices = vertex_interface.vertices
 
         if is_full_wave_considered:
-            return [
-                wave for wave in flood_waves
-                if any(station == target_station for station, _ in wave) and
-                all(vertices[station][date]['color'] == 'red'
-                    for station, date in wave)
-            ]
+            return list(filter(
+                lambda wave: (
+                    any(station == target_station for station, _ in wave) and
+                    all(vertices[station][date]['color'] == 'red' for station, date in wave)
+                ),
+                flood_waves
+            ))
         else:
-            return [
-                wave for wave in flood_waves
-                if any(station == target_station and
-                       vertices[station][date]['color'] == 'red'
-                       for station, date in wave)
-            ]
+            return list(filter(
+                lambda wave: any(
+                    station == target_station and vertices[station][date]['color'] == 'red'
+                    for station, date in wave
+                ),
+                flood_waves
+            ))

@@ -172,10 +172,10 @@ class StatisticalAnalyzer:
         df = pd.DataFrame(records).set_index('date')
         df['is_error'] = df['slope'] <= 0
 
-        yearly = df.resample('YE')['is_error'].mean()
+        yearly = df.resample('YE')['is_error'].mean().to_frame(name='error ratio')
         yearly.index = yearly.index.to_period('Y')
 
-        quarterly = df.resample('QE')['is_error'].mean()
+        quarterly = df.resample('QE')['is_error'].mean().to_frame(name='error ratio')
         quarterly.index = quarterly.index.to_period('Q')
 
         return {'yearly': yearly, 'quarterly': quarterly}

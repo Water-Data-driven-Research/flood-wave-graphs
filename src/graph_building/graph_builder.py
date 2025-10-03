@@ -58,9 +58,13 @@ class GraphBuilder:
         edges = self.edge_finder.edge_interface.edges
 
         final_edges = []
-        for (start_gauge, end_gauge), date_pairs in edges.items():
-            for start_date, end_date in date_pairs:
-                final_edges.append(((start_gauge, start_date), (end_gauge, end_date)))
+        for (start_gauge, end_gauge), data in edges.items():
+            for ((start_date, end_date), slope) in data:
+                final_edges.append((
+                    (start_gauge, start_date),
+                    (end_gauge, end_date),
+                    {'slope': slope}
+                ))
 
         fwg.add_edges_from(ebunch_to_add=final_edges)
 

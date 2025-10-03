@@ -1,5 +1,3 @@
-from itertools import product
-
 import pandas as pd
 
 from src.graph_building.interfaces.edge_interface import EdgeInterface
@@ -31,26 +29,29 @@ class EdgeFinder:
         """
         edges = dict()
         for upstream, downstream in zip(self.gauges[:-1], self.gauges[1:]):
-            upstream_vertices = vertex_interface.vertices[upstream]
-            downstream_vertices = vertex_interface.vertices[downstream]
-
             edges[(upstream, downstream)] = self.find_edges(
-                upstream_vertices=upstream_vertices,
-                downstream_vertices=downstream_vertices
+                upstream=upstream,
+                downstream=downstream,
+                vertices=vertex_interface.vertices
             )
 
         self.edge_interface = EdgeInterface(edges=edges)
 
     def find_edges(self,
-                   upstream_vertices: dict,
-                   downstream_vertices: dict
+                   upstream: str,
+                   downstream: str,
+                   vertices: dict
                    ) -> list:
         """
         We find the edges between two stations.
-        :param dict upstream_vertices: the vertices of the upstream station
-        :param dict downstream_vertices: the vertices of the downstream station
+        :param str upstream: the start station
+        :param str downstream: the end station
+        :param dict vertices: potential vertices of the graph
         :return list: found edges
         """
+        upstream_vertices = vertices[upstream]
+        downstream_vertices = vertices[downstream]
+
         upstream_dates = pd.to_datetime(
             list(upstream_vertices.keys()),
             format='ISO8601'
@@ -64,15 +65,18 @@ class EdgeFinder:
         for up_date in upstream_dates:
             cond = (downstream_dates >= up_date) & \
                    (downstream_dates <= up_date + pd.Timedelta(days=self.beta))
+            down_dates = downstream_dates[cond]
+            for down_date in down_dates:
+                up_date = up_date.strftime('%Y-%m-%d')
+                down_date = down_date.strftime('%Y-%m-%d')
 
-            next_dates = downstream_dates[cond]
-            new_edges = list(
-                product(
-                    [up_date.strftime('%Y-%m-%d')],
-                    [date.strftime('%Y-%m-%d') for date in next_dates]
+                up_level = upstream_vertices[up_date]['value']
+                down_level = downstream_vertices[down_date]['value']
+                distance = float(downstream) - float(upstream)
+                slope = (down_level - up_level) / distance
+
+                found_edges.append(
+                    ((up_date, down_date), slope)
                 )
-            )
-
-            found_edges.extend(new_edges)
 
         return found_edges

@@ -38,7 +38,7 @@ class FloodWaveFilter:
     def get_red_waves(flood_waves: list,
                       vertex_interface: VertexDataInterface,
                       target_station: str,
-                      check_whole_wave: bool = False
+                      is_full_wave_considered: bool = False
                       ) -> list:
         """
         We find all flood waves that pass through the target station while
@@ -47,23 +47,25 @@ class FloodWaveFilter:
         :param VertexDataInterface vertex_interface: interface containing necessary
                                                      vertex data (colors)
         :param str target_station: the station to filter for
-        :param bool check_whole_wave: True if we require all nodes in the wave to be red,
-                                      False if we only consider the one at the target station
+        :param bool is_full_wave_considered: True if we require all nodes in the wave to be red,
+                                             False if we only consider the one at the target station
         :return list: all high water level (red) waves at the target station
         """
         vertices = vertex_interface.vertices
 
-        if check_whole_wave:
-            return [
-                wave for wave in flood_waves
-                if any(station == target_station for station, _ in wave) and
-                all(vertices[station][date]['color'] == 'red'
-                    for station, date in wave)
-            ]
+        if is_full_wave_considered:
+            return list(filter(
+                lambda wave: (
+                    any(station == target_station for station, _ in wave) and
+                    all(vertices[station][date]['color'] == 'red' for station, date in wave)
+                ),
+                flood_waves
+            ))
         else:
-            return [
-                wave for wave in flood_waves
-                if any(station == target_station and
-                       vertices[station][date]['color'] == 'red'
-                       for station, date in wave)
-            ]
+            return list(filter(
+                lambda wave: any(
+                    station == target_station and vertices[station][date]['color'] == 'red'
+                    for station, date in wave
+                ),
+                flood_waves
+            ))

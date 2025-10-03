@@ -1,3 +1,4 @@
+import networkx as nx
 import pandas as pd
 
 from src.graph_building.interfaces.vertex_data_interface import VertexDataInterface
@@ -170,3 +171,24 @@ class StatisticalAnalyzer:
             check_whole_wave=check_whole_wave
         )
         return self.get_propagation_time_stat(red_waves, statistic=statistic)
+
+    @staticmethod
+    def get_slope_distribution(fwg: nx.DiGraph) -> dict:
+        """
+        Count the ratio of edges with positive/zero/negative slopes.
+        :param nx.DiGraph fwg: the flood wave graph to analyze
+        :return dict: ratios {'positive': x, 'zero': y, 'negative': z}
+        """
+        slopes = list()
+        for u, v, data in fwg.edges(data=True):
+            slopes.append(data.get('slope'))
+
+        if not slopes:
+            return {'positive': 0, 'zero': 0, 'negative': 0}
+
+        total = len(slopes)
+        return {
+            'positive': sum(1 for s in slopes if s > 0) / total,
+            'zero': sum(1 for s in slopes if s == 0) / total,
+            'negative': sum(1 for s in slopes if s < 0) / total
+        }

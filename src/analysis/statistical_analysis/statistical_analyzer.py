@@ -25,6 +25,25 @@ class StatisticalAnalyzer:
         self.vertex_interface = vertex_interface
 
     @staticmethod
+    def get_period_stats(df: pd.DataFrame, statistic: str) -> dict:
+        """
+        We group data by period and return a dictionary with period statistics.
+        :param pd.DataFrame df: data to resample
+        :param str statistic: statistic to calculate
+        :return dict: period statistics
+        """
+        try:
+            yearly = getattr(df.resample('YE'), statistic)()
+            quarterly = getattr(df.resample('QE'), statistic)()
+        except AttributeError:
+            raise ValueError('Invalid statistic')
+
+        yearly.index = yearly.index.to_period('Y')
+        quarterly.index = quarterly.index.to_period('Q')
+
+        return {'yearly': yearly, 'quarterly': quarterly}
+
+    @staticmethod
     def get_flood_wave_count(flood_waves: list) -> dict:
         """
         Calculates the number of flood waves from a given list,
@@ -39,13 +58,10 @@ class StatisticalAnalyzer:
             'flood wave count': 1
         }).set_index('date')
 
-        yearly = df.resample('YE').sum()
-        yearly.index = yearly.index.to_period('Y')
-
-        quarterly = df.resample('QE').sum()
-        quarterly.index = quarterly.index.to_period('Q')
-
-        return {'yearly': yearly, 'quarterly': quarterly}
+        return StatisticalAnalyzer.get_period_stats(
+            df=df,
+            statistic='sum'
+        )
 
     @staticmethod
     def get_propagation_time_stat(flood_waves: list, statistic: str = 'mean') -> dict:
@@ -68,16 +84,10 @@ class StatisticalAnalyzer:
             f'{statistic} propagation time': propagation_times
         }).set_index('date')
 
-        try:
-            yearly = getattr(df.resample('YE'), statistic)()
-            quarterly = getattr(df.resample('QE'), statistic)()
-        except AttributeError:
-            raise ValueError('Invalid statistic')
-
-        yearly.index = yearly.index.to_period('Y')
-        quarterly.index = quarterly.index.to_period('Q')
-
-        return {'yearly': yearly, 'quarterly': quarterly}
+        return StatisticalAnalyzer.get_period_stats(
+            df=df,
+            statistic=statistic
+        )
 
     def get_flood_wave_count_between_stations(self,
                                               lower_station: float = None,

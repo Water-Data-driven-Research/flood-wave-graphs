@@ -2,10 +2,11 @@ class SlopeAnalyzer:
     """
     This class is responsible for the analysis of slope values.
     """
-    @staticmethod
-    def get_slope_distribution():
+    def __init__(self):
         pass
 
-    @staticmethod
-    def get_slope_error_ratios_between_stations():
+    def get_slope_distribution(self):
+        pass
+
+    def get_slope_error_ratios_between_stations(self):
         pass

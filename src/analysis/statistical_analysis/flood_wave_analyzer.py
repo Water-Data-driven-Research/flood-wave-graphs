@@ -6,52 +6,57 @@ from src.graph_manipulation.flood_wave_filter import FloodWaveFilter
 
 class FloodWaveAnalyzer:
     """
-    This class is responsible for the general statistical analysis of flood waves.
+    This class is responsible for the analysis of flood waves between two stations.
     """
-    @staticmethod
-    def get_flood_wave_count_between_stations(extracted_graph: nx.DiGraph,
-                                              lower_station: float = None,
-                                              upper_station: float = None,
-                                              with_equivalence: bool = True
-                                              ) -> dict:
+    def __init__(self,
+                 extracted_graph: nx.DiGraph,
+                 lower_station: float = None,
+                 upper_station: float = None,
+                 with_equivalence: bool = True
+                 ):
         """
-        Calculates the number of flood waves between two stations,
-        yearly and quarterly.
+        Constructor.
         :param nx.DiGraph extracted_graph: graph object containing flood waves
         :param float lower_station: the downstream station (river km)
         :param float upper_station: the upstream station (river km)
         :param bool with_equivalence: whether to apply equivalence on paths
-        :return dict: keys are time interval sizes, values are the respective data
         """
-        flood_waves = FloodWaveFilter.get_filtered_waves(
-            extracted_graph=extracted_graph,
-            lower_station=lower_station,
-            upper_station=upper_station,
-            with_equivalence=with_equivalence
-        )
-        return StatCalculator.get_flood_wave_count(flood_waves)
+        self.extracted_graph = extracted_graph
+        self.lower_station = lower_station
+        self.upper_station = upper_station
+        self.with_equivalence = with_equivalence
 
-    @staticmethod
-    def get_propagation_time_stat_between_stations(extracted_graph: nx.DiGraph,
-                                                   lower_station: float = None,
-                                                   upper_station: float = None,
-                                                   statistic: str = 'mean',
-                                                   with_equivalence: bool = True
-                                                   ) -> dict:
+    def get_flood_wave_count(self) -> dict:
         """
-        Calculates selected statistic of wave propagation times
-        between two stations, yearly and quarterly.
-        :param nx.DiGraph extracted_graph: graph object containing flood waves
-        :param float lower_station: the downstream station (river km)
-        :param float upper_station: the upstream station (river km)
-        :param str statistic: the statistic to calculate
-        :param bool with_equivalence: whether to apply equivalence on paths
-        :return dict: keys are time interval sizes, values are the respective data
+        Calculates the number of flood waves between the two stations.
+        Data is aggregated yearly and quarterly.
+        :return dict: keys are frequencies, values are the respective data
         """
         flood_waves = FloodWaveFilter.get_filtered_waves(
-            extracted_graph=extracted_graph,
-            lower_station=lower_station,
-            upper_station=upper_station,
-            with_equivalence=with_equivalence
+            extracted_graph=self.extracted_graph,
+            lower_station=self.lower_station,
+            upper_station=self.upper_station,
+            with_equivalence=self.with_equivalence
         )
-        return StatCalculator.get_propagation_time_stat(flood_waves, statistic=statistic)
+        return StatCalculator.get_flood_wave_count(
+            flood_waves=flood_waves
+        )
+
+    def get_propagation_time_stat(self, statistic: str = 'mean') -> dict:
+        """
+        Calculates the selected statistic of flood wave
+        propagation times between the two stations.
+        Data is aggregated yearly and quarterly.
+        :param str statistic: the statistic to calculate
+        :return dict: keys are frequencies, values are the respective data
+        """
+        flood_waves = FloodWaveFilter.get_filtered_waves(
+            extracted_graph=self.extracted_graph,
+            lower_station=self.lower_station,
+            upper_station=self.upper_station,
+            with_equivalence=self.with_equivalence
+        )
+        return StatCalculator.get_propagation_time_stat(
+            flood_waves=flood_waves,
+            statistic=statistic
+        )

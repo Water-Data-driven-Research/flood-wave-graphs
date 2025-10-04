@@ -11,7 +11,7 @@ class StatCalculator:
         We group data by period and return a dictionary with period statistics.
         :param pd.DataFrame df: data to resample
         :param str statistic: statistic to calculate
-        :return dict: period statistics
+        :return dict: keys are frequencies, values are the respective data
         """
         try:
             yearly = getattr(df.resample('YE'), statistic)()
@@ -30,7 +30,7 @@ class StatCalculator:
         Calculates the number of flood waves from a given list,
         aggregated yearly and quarterly.
         :param list flood_waves: list of flood waves to analyze
-        :return dict: keys are time interval sizes, values are the respective data
+        :return dict: keys are frequencies, values are the respective data
         """
         wave_dates = [wave[0][1] for wave in flood_waves]
 
@@ -51,7 +51,7 @@ class StatCalculator:
         aggregated yearly and quarterly.
         :param list flood_waves: list of flood waves to analyze
         :param str statistic: the statistic to calculate (mean, median, etc.)
-        :return dict: keys are time interval sizes, values are the respective data
+        :return dict: keys are frequencies, values are the respective data
         """
         start_dates, propagation_times = zip(*map(
             lambda wave:

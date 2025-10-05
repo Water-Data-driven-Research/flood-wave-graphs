@@ -46,7 +46,7 @@ def mock_flood_wave_interface() -> FloodWaveInterface:
         'flood_waves': flood_waves,
         'extracted_graph': extracted_graph
     }
-    return FloodWaveInterface(data)
+    return FloodWaveInterface(data=data)
 
 
 @pytest.fixture

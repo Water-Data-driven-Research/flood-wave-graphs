@@ -1,3 +1,5 @@
+from collections import Counter
+
 import networkx as nx
 import pandas as pd
 
@@ -20,19 +22,17 @@ class SlopeAnalyzer:
         Count the ratio of edges with positive/zero/negative slopes.
         :return dict: ratios {'positive': x, 'zero': y, 'negative': z}
         """
-        slopes = list()
-        for u, v, data in self.fwg.edges(data=True):
-            slopes.append(data.get('slope'))
-
+        slopes = [data.get('slope') for _, _, data in self.fwg.edges(data=True)]
         if not slopes:
             return {'positive': 0, 'zero': 0, 'negative': 0}
 
+        categories = Counter(
+            'positive' if s > 0 else 'zero' if s == 0 else 'negative'
+            for s in slopes
+        )
+
         total = len(slopes)
-        return {
-            'positive': sum(1 for s in slopes if s > 0) / total,
-            'zero': sum(1 for s in slopes if s == 0) / total,
-            'negative': sum(1 for s in slopes if s < 0) / total
-        }
+        return {k: categories.get(k, 0) / total for k in ['positive', 'zero', 'negative']}
 
     def get_slope_error_ratios_between_stations(self,
                                                 lower_station: float,

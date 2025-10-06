@@ -38,8 +38,13 @@ def mock_flood_wave_interface() -> FloodWaveInterface:
         [('1.0', '2000-06-01'), ('2.0', '2000-06-02')],
         [('1.0', '2000-06-01'), ('2.0', '2000-06-03')],
     ]
+    slopes = [2, 2, 6, -2, 0, -4]
+
     extracted_graph = nx.DiGraph()
-    edges = [((wave[0][0], wave[0][1]), (wave[1][0], wave[1][1])) for wave in flood_waves]
+    edges = [
+        ((wave[0][0], wave[0][1]), (wave[1][0], wave[1][1]), {'slope': slope})
+        for wave, slope in zip(flood_waves, slopes)
+    ]
     extracted_graph.add_edges_from(edges)
 
     data = {
@@ -192,4 +197,40 @@ def test_high_water_level_analyzer(stat_analyzer: StatisticalAnalyzer,
     pd.testing.assert_frame_equal(
         red_wave_prop_stat['quarterly'],
         expected_prop_stat['quarterly']
+    )
+
+
+def test_slope_analyzer(stat_analyzer: StatisticalAnalyzer):
+    slope_analyzer = stat_analyzer.get_slope_analyzer()
+
+    slope_distribution = slope_analyzer.get_slope_distribution()
+
+    expected_distribution = {
+        'positive': 3 / 6,
+        'zero': 1 / 6,
+        'negative': 2 / 6
+    }
+    assert slope_distribution == expected_distribution
+
+    slope_error_ratios = slope_analyzer.get_slope_error_ratios_between_stations(
+        lower_station=1.0,
+        upper_station=2.0
+    )
+
+    expected_yearly = pd.DataFrame({
+        'date': pd.to_datetime('2000-01').to_period('Y'),
+        'error ratio': [3 / 6]
+    }).set_index('date')
+    expected_quarterly = pd.DataFrame({
+        'date': pd.to_datetime(['2000-01', '2000-06']).to_period('Q'),
+        'error ratio': [1 / 4, 2 / 2]
+    }).set_index('date')
+
+    pd.testing.assert_frame_equal(
+        slope_error_ratios['yearly'],
+        expected_yearly
+    )
+    pd.testing.assert_frame_equal(
+        slope_error_ratios['quarterly'],
+        expected_quarterly
     )

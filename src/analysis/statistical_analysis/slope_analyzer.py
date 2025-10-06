@@ -51,17 +51,15 @@ class SlopeAnalyzer:
             upper_station=upper_station
         )
 
-        records = list()
-        for u, v, data in filtered_graph.edges(data=True):
-            start_date = u[1]
-            slope = data.get('slope')
+        edges_data = [
+            (pd.to_datetime(u[1]), data.get('slope'))
+            for u, v, data in filtered_graph.edges(data=True)
+        ]
+        if not edges_data:
+            empty = pd.DataFrame(columns=['error ratio'])
+            return {'yearly': empty, 'quarterly': empty}
 
-            records.append({
-                'date': pd.to_datetime(start_date),
-                'slope': slope
-            })
-
-        df = pd.DataFrame(records).set_index('date')
+        df = pd.DataFrame(data=edges_data, columns=['date', 'slope']).set_index('date')
         df['is_error'] = df['slope'] <= 0
 
         yearly = df.resample('YE')['is_error'].mean().to_frame(name='error ratio')

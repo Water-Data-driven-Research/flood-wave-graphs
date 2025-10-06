@@ -1,5 +1,8 @@
+import networkx as nx
+
 from src.analysis.statistical_analysis.flood_wave_analyzer import FloodWaveAnalyzer
 from src.analysis.statistical_analysis.high_water_level_analyzer import HighWaterLevelAnalyzer
+from src.analysis.statistical_analysis.slope_analyzer import SlopeAnalyzer
 from src.graph_building.interfaces.vertex_data_interface import VertexDataInterface
 from src.graph_manipulation.interfaces.flood_wave_interface import FloodWaveInterface
 
@@ -59,3 +62,14 @@ class StatisticalAnalyzer:
             target_station=target_station,
             is_full_wave_considered=is_full_wave_considered
         )
+
+    def get_slope_analyzer(self, fwg: nx.DiGraph = None) -> SlopeAnalyzer:
+        """
+        Returns a SlopeAnalyzer instance configured with the given parameters.
+        :param nx.DiGraph fwg: the flood wave graph to analyze
+        :return SlopeAnalyzer: the SlopeAnalyzer instance
+        """
+        if fwg is None:
+            fwg = self.flood_wave_interface.extracted_graph
+
+        return SlopeAnalyzer(fwg=fwg)

@@ -1,12 +1,73 @@
+import networkx as nx
+import pandas as pd
+
+from src.graph_manipulation.fwg_filter import FWGFilter
+
+
 class SlopeAnalyzer:
     """
     This class is responsible for the analysis of slope values.
     """
-    def __init__(self):
-        pass
+    def __init__(self, fwg: nx.DiGraph):
+        """
+        Constructor.
+        :param nx.DiGraph fwg: the flood wave graph to analyze
+        """
+        self.fwg = fwg
 
-    def get_slope_distribution(self):
-        pass
+    def get_slope_distribution(self) -> dict:
+        """
+        Count the ratio of edges with positive/zero/negative slopes.
+        :return dict: ratios {'positive': x, 'zero': y, 'negative': z}
+        """
+        slopes = list()
+        for u, v, data in self.fwg.edges(data=True):
+            slopes.append(data.get('slope'))
 
-    def get_slope_error_ratios_between_stations(self):
-        pass
+        if not slopes:
+            return {'positive': 0, 'zero': 0, 'negative': 0}
+
+        total = len(slopes)
+        return {
+            'positive': sum(1 for s in slopes if s > 0) / total,
+            'zero': sum(1 for s in slopes if s == 0) / total,
+            'negative': sum(1 for s in slopes if s < 0) / total
+        }
+
+    def get_slope_error_ratios_between_stations(self,
+                                                lower_station: float,
+                                                upper_station: float
+                                                ) -> dict:
+        """
+        For a station pair, compute error ratios (zero/negative slopes).
+        Data is aggregated yearly and quarterly.
+        :param float lower_station: the downstream station
+        :param float upper_station: the upstream station
+        :return dict: keys are frequencies, values are the respective data
+        """
+        filtered_graph = FWGFilter.filter_stations(
+            fwg=self.fwg,
+            lower_station=lower_station,
+            upper_station=upper_station
+        )
+
+        records = list()
+        for u, v, data in filtered_graph.edges(data=True):
+            start_date = u[1]
+            slope = data.get('slope')
+
+            records.append({
+                'date': pd.to_datetime(start_date),
+                'slope': slope
+            })
+
+        df = pd.DataFrame(records).set_index('date')
+        df['is_error'] = df['slope'] <= 0
+
+        yearly = df.resample('YE')['is_error'].mean().to_frame(name='error ratio')
+        yearly.index = yearly.index.to_period('Y')
+
+        quarterly = df.resample('QE')['is_error'].mean().to_frame(name='error ratio')
+        quarterly.index = quarterly.index.to_period('Q')
+
+        return {'yearly': yearly, 'quarterly': quarterly}

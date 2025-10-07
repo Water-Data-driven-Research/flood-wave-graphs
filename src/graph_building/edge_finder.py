@@ -67,16 +67,16 @@ class EdgeFinder:
                    (downstream_dates <= up_date + pd.Timedelta(days=self.beta))
             down_dates = downstream_dates[cond]
             for down_date in down_dates:
-                up_date = up_date.strftime('%Y-%m-%d')
-                down_date = down_date.strftime('%Y-%m-%d')
+                up_date_str = up_date.strftime('%Y-%m-%d')
+                down_date_str = down_date.strftime('%Y-%m-%d')
 
-                up_level = upstream_vertices[up_date]['value']
-                down_level = downstream_vertices[down_date]['value']
+                up_level = upstream_vertices[up_date_str]['value']
+                down_level = downstream_vertices[down_date_str]['value']
                 distance = float(downstream) - float(upstream)
                 slope = (down_level - up_level) / distance
 
                 found_edges.append(
-                    ((up_date, down_date), slope)
+                    ((up_date_str, down_date_str), slope)
                 )
 
         return found_edges

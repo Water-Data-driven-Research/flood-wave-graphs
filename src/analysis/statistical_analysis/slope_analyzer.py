@@ -1,6 +1,5 @@
-from collections import Counter
-
 import networkx as nx
+import numpy as np
 import pandas as pd
 
 from src.graph_manipulation.fwg_filter import FWGFilter
@@ -24,15 +23,22 @@ class SlopeAnalyzer:
         """
         slopes = [data.get('slope') for _, _, data in self.fwg.edges(data=True)]
         if not slopes:
-            return {'positive': 0, 'zero': 0, 'negative': 0}
+            return {'positive': 0.0, 'zero': 0.0, 'negative': 0.0}
 
-        categories = Counter(
-            'positive' if s > 0 else 'zero' if s == 0 else 'negative'
-            for s in slopes
+        df = pd.DataFrame({'slope': slopes})
+        df['category'] = np.select(
+            condlist=[df['slope'] > 0, df['slope'] == 0, df['slope'] < 0],
+            choicelist=['positive', 'zero', 'negative'],
+            default='unknown'
         )
 
-        total = len(slopes)
-        return {k: categories.get(k, 0) / total for k in ['positive', 'zero', 'negative']}
+        freq = pd.crosstab(
+            index=df['category'],
+            columns=['count'],
+            normalize='columns'
+        )['count']
+
+        return {cat: freq.get(cat) for cat in ['positive', 'zero', 'negative']}
 
     def get_slope_error_ratios_between_stations(self,
                                                 lower_station: float,

@@ -41,8 +41,8 @@ class SlopeAnalyzer:
         return {cat: freq.get(cat) for cat in ['positive', 'zero', 'negative']}
 
     def get_slope_error_ratios_between_stations(self,
-                                                lower_station: float,
-                                                upper_station: float
+                                                lower_station: float = None,
+                                                upper_station: float = None
                                                 ) -> dict:
         """
         For a station pair, compute error ratios (zero/negative slopes).

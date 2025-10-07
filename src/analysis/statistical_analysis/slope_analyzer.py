@@ -32,13 +32,13 @@ class SlopeAnalyzer:
             default='unknown'
         )
 
-        freq = pd.crosstab(
-            index=df['category'],
-            columns=['count'],
-            normalize='columns'
-        )['count']
-
-        return {cat: freq.get(cat) for cat in ['positive', 'zero', 'negative']}
+        return (
+            df.groupby('category')
+            .size()
+            .div(len(df))
+            .reindex(index=['positive', 'zero', 'negative'], fill_value=0.0)
+            .to_dict()
+        )
 
     def get_slope_error_ratios_between_stations(self,
                                                 lower_station: float = None,

@@ -121,17 +121,15 @@ class FloodWaveExtractor:
 
         return waves
 
-    @staticmethod
-    def build_wave_graph(flood_waves: list) -> nx.DiGraph:
+    def build_wave_graph(self, flood_waves: list) -> nx.DiGraph:
         """
         Build a graph object from the extracted waves.
         :param list flood_waves: extracted waves
         """
         extracted_graph = nx.DiGraph()
         for wave in flood_waves:
-            nx.add_path(
-                G_to_add_to=extracted_graph,
-                nodes_for_path=wave
-            )
+            for u, v in zip(wave[:-1], wave[1:]):
+                edge_data = self.fwg.get_edge_data(u, v)
+                extracted_graph.add_edge(u, v, **edge_data)
 
         return extracted_graph

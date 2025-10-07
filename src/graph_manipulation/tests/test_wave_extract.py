@@ -8,10 +8,10 @@ from src.graph_manipulation.flood_wave_extractor import FloodWaveExtractor
 def mock_graph() -> nx.DiGraph:
     graph = nx.DiGraph()
     graph.add_edges_from([
-        (('A', '1'), ('B', '2')),
-        (('B', '2'), ('D', '4')),
-        (('A', '1'), ('C', '3')),
-        (('C', '3'), ('D', '4'))
+        (('A', '1'), ('B', '2'), {'slope': 1}),
+        (('B', '2'), ('D', '4'), {'slope': 1}),
+        (('A', '1'), ('C', '3'), {'slope': 1}),
+        (('C', '3'), ('D', '4'), {'slope': 1})
     ])
     return graph
 
@@ -49,9 +49,8 @@ def test_wave_extraction(mock_graph: nx.DiGraph,
 
     expected_graph = nx.DiGraph()
     for wave in expected_waves:
-        nx.add_path(
-            G_to_add_to=expected_graph,
-            nodes_for_path=wave
-        )
+        for u, v in zip(wave[:-1], wave[1:]):
+            edge_data = mock_graph.get_edge_data(u, v)
+            expected_graph.add_edge(u, v, **edge_data)
 
     assert nx.is_isomorphic(extracted_graph, expected_graph)

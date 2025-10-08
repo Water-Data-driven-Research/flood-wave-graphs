@@ -32,7 +32,7 @@ mock_info = {
             'start': dates[0],
             'end': dates[-1]
         },
-        'null_point': 10,
+        'null_point': 0.1,
         'level_group': 6
     }
     for gauge in mock_data.keys()

@@ -41,7 +41,7 @@ class FloodWaveExtractor:
         """
         components = sorted(map(
             sorted,
-            list(nx.weakly_connected_components(self.fwg))
+            list(nx.weakly_connected_components(G=self.fwg))
         ))
 
         flood_waves = list()

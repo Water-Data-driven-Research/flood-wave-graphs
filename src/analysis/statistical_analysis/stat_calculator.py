@@ -45,12 +45,14 @@ class StatCalculator:
         )
 
     @staticmethod
-    def get_propagation_time_stat(flood_waves: list, statistic: str = 'mean') -> dict:
+    def get_propagation_time_stat(flood_waves: list, statistic: str = 'mean',
+                                  is_aggregated: bool = True) -> dict:
         """
         Calculates selected statistic of wave propagation times from a given list,
         aggregated yearly and quarterly.
         :param list flood_waves: list of flood waves to analyze
         :param str statistic: the statistic to calculate (mean, median, etc.)
+        :param bool is_aggregated: whether to aggregate by the statistic
         :return dict: keys are frequencies, values are the respective data
         """
         start_dates, propagation_times = zip(*map(
@@ -65,7 +67,10 @@ class StatCalculator:
             f'{statistic} propagation time': propagation_times
         }).set_index('date')
 
-        return StatCalculator.get_period_stats(
-            df=df,
-            statistic=statistic
-        )
+        if is_aggregated:
+            return StatCalculator.get_period_stats(
+                df=df,
+                statistic=statistic
+            )
+        else:
+            return {"total": df}

@@ -42,12 +42,14 @@ class FloodWaveAnalyzer:
             flood_waves=flood_waves
         )
 
-    def get_propagation_time_stat(self, statistic: str = 'mean') -> dict:
+    def get_propagation_time_stat(self, statistic: str = 'mean',
+                                  is_aggregated: bool = True) -> dict:
         """
         Calculates the selected statistic of flood wave
         propagation times between the two stations.
         Data is aggregated yearly and quarterly.
         :param str statistic: the statistic to calculate
+        :param bool is_aggregated: whether to aggregate by the statistic
         :return dict: keys are frequencies, values are the respective data
         """
         flood_waves = FloodWaveFilter.get_filtered_waves(
@@ -58,5 +60,6 @@ class FloodWaveAnalyzer:
         )
         return StatCalculator.get_propagation_time_stat(
             flood_waves=flood_waves,
-            statistic=statistic
+            statistic=statistic,
+            is_aggregated=is_aggregated
         )

@@ -12,8 +12,9 @@ class GraphBuilder:
     """
     def __init__(self,
                  data_interface: DataInterface,
+                 delta: int = 2,
                  beta: int = 2,
-                 delta: int = 2
+                 alpha: int = 1,
                  ):
         """
         Constructor.
@@ -22,10 +23,12 @@ class GraphBuilder:
         :param int delta: the number of days that a record is required to be greater
                           than the records before, and to be greater or equal to after
                           to be considered a peak
+        :param int alpha: the number of days minimally needed to consider an edge
         """
         self.data_interface = data_interface
-        self.beta = beta
         self.delta = delta
+        self.beta = beta
+        self.alpha = alpha
 
         self.delta_peak_finder = DeltaPeakFinder(
             data_interface=self.data_interface,
@@ -33,7 +36,8 @@ class GraphBuilder:
         )
         self.edge_finder = EdgeFinder(
             gauges=self.data_interface.gauges,
-            beta=self.beta
+            beta=self.beta,
+            alpha=alpha
         )
 
         self.fwg_interface: FWGInterface = None

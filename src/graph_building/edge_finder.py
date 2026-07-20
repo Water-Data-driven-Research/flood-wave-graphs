@@ -10,15 +10,18 @@ class EdgeFinder:
     """
     def __init__(self,
                  gauges: list,
-                 beta: int
+                 beta: int,
+                 alpha: int = 1
                  ):
         """
         Constructor.
         :param list gauges: list of stations
         :param int beta: the number of days allowed after a vertex for continuation
+        :param int alpha: the number of days minimally needed to consider an edge
         """
         self.gauges = gauges
         self.beta = beta
+        self.alpha = alpha
 
         self.edge_interface: EdgeInterface = None
 
@@ -63,7 +66,8 @@ class EdgeFinder:
 
         found_edges = list()
         for up_date in upstream_dates:
-            cond = (downstream_dates >= up_date) & \
+            # alpha + up_date <= down_date <= beta + up_date
+            cond = (downstream_dates >= up_date + pd.Timedelta(days=self.alpha)) & \
                    (downstream_dates <= up_date + pd.Timedelta(days=self.beta))
             down_dates = downstream_dates[cond]
             for down_date in down_dates:

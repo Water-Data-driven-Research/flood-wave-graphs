@@ -3,12 +3,37 @@ import networkx as nx
 from src.graph_building.interfaces.vertex_data_interface import VertexDataInterface
 from src.graph_manipulation.flood_wave_extractor import FloodWaveExtractor
 from src.graph_manipulation.fwg_filter import FWGFilter
+from src.graph_manipulation.interfaces.flood_wave_interface import FloodWaveInterface
 
 
 class FloodWaveFilter:
     """
     Class used to prepare flood waves for analysis.
     """
+
+    @staticmethod
+    def get_filtered_graph(extracted_graph: nx.DiGraph,
+                           lower_station: float = None,
+                           upper_station: float = None,
+                           with_equivalence: bool = True
+                           ) -> FloodWaveInterface:
+        """
+        Takes subgraph of the FWG between two stations.
+        :param nx.DiGraph extracted_graph: graph object containing waves
+        :param float lower_station: the downstream station (river km)
+        :param float upper_station: the upstream station (river km)
+        :param bool with_equivalence: whether to apply equivalence on paths
+        :return FloodWaveInterface: interface for the restricted graph
+        """
+        graph_section = FWGFilter.filter_stations(
+            fwg=extracted_graph,
+            lower_station=lower_station,
+            upper_station=upper_station
+        )
+
+        extractor = FloodWaveExtractor(fwg=graph_section)
+        return extractor(with_equivalence=with_equivalence)
+
     @staticmethod
     def get_filtered_waves(extracted_graph: nx.DiGraph,
                            lower_station: float = None,
@@ -23,14 +48,12 @@ class FloodWaveFilter:
         :param bool with_equivalence: whether to apply equivalence on paths
         :return list: list of filtered waves
         """
-        graph_section = FWGFilter.filter_stations(
-            fwg=extracted_graph,
+        flood_waves = FloodWaveFilter.get_filtered_graph(
+            extracted_graph=extracted_graph,
             lower_station=lower_station,
-            upper_station=upper_station
-        )
-
-        extractor = FloodWaveExtractor(fwg=graph_section)
-        flood_waves = extractor(with_equivalence=with_equivalence).flood_waves
+            upper_station=upper_station,
+            with_equivalence=with_equivalence
+        ).flood_waves
 
         return flood_waves
 

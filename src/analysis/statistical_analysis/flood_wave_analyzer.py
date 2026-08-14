@@ -63,3 +63,25 @@ class FloodWaveAnalyzer:
             statistic=statistic,
             is_aggregated=is_aggregated
         )
+
+    def get_slope_stat(self, statistic: str = 'mean',
+                       is_aggregated: bool = True) -> dict:
+        """
+        Calculates the slope statistics between the two stations.
+        Data is aggregated yearly and quarterly.
+        :param str statistic: the statistic to calculate
+        :param bool is_aggregated: whether to aggregate by the statistic
+        :return dict: keys are frequencies, values are the respective data
+        """
+        fwg_subgraph = FloodWaveFilter.get_filtered_graph(
+            extracted_graph=self.extracted_graph,
+            lower_station=self.lower_station,
+            upper_station=self.upper_station,
+            with_equivalence=self.with_equivalence
+        ).extracted_graph
+
+        return StatCalculator.get_slope_stat(
+            fwg=fwg_subgraph,
+            statistic=statistic,
+            is_aggregated=is_aggregated
+        )

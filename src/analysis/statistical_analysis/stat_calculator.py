@@ -52,9 +52,9 @@ class StatCalculator:
         """
         Calculates selected statistic of the selected edge level information
         from a given list, aggregated yearly and quarterly.
-        :param list start_dates: ...
+        :param list start_dates: starting date of the flood wave
         :param str edge_info: edge info to calculate
-        :param list stat_data: ...
+        :param list stat_data: calculated info along the edges
         :param str statistic: the statistic to calculate (mean, median, etc.)
         :param bool is_aggregated: whether to aggregate by the statistic
         :return dict: keys are frequencies, values are the respective data
@@ -102,7 +102,12 @@ class StatCalculator:
                        statistic: str = 'mean',
                        is_aggregated: bool = True) -> dict:
         """
-        ...
+        Calculates selected statistic of slopes from the extracted subgraph,
+        aggregated yearly and quarterly.
+        :param nx.DiGraph fwg: extracted subgraph
+        :param str statistic: the statistic to calculate (mean, median, etc.)
+        :param bool is_aggregated: whether to aggregate by the statistic
+        :return dict: keys are frequencies, values are the respective data
         """
         start_dates, slope_data = zip(*map(
             lambda edge_w_data:

@@ -1,3 +1,4 @@
+import networkx as nx
 import pandas as pd
 
 
@@ -45,6 +46,33 @@ class StatCalculator:
         )
 
     @staticmethod
+    def get_edge_level_stat(start_dates: list, edge_info: str,
+                            stat_data: list, statistic: str = 'mean',
+                            is_aggregated: bool = True) -> dict:
+        """
+        Calculates selected statistic of the selected edge level information
+        from a given list, aggregated yearly and quarterly.
+        :param list start_dates: starting date of the flood wave
+        :param str edge_info: edge info to calculate
+        :param list stat_data: calculated info along the edges
+        :param str statistic: the statistic to calculate (mean, median, etc.)
+        :param bool is_aggregated: whether to aggregate by the statistic
+        :return dict: keys are frequencies, values are the respective data
+        """
+        df = pd.DataFrame({
+            'date': start_dates,
+            f'{statistic} {edge_info}': stat_data
+        }).set_index('date')
+
+        if is_aggregated:
+            return StatCalculator.get_period_stats(
+                df=df,
+                statistic=statistic
+            )
+        else:
+            return {"total": df}
+
+    @staticmethod
     def get_propagation_time_stat(flood_waves: list, statistic: str = 'mean',
                                   is_aggregated: bool = True) -> dict:
         """
@@ -55,22 +83,42 @@ class StatCalculator:
         :param bool is_aggregated: whether to aggregate by the statistic
         :return dict: keys are frequencies, values are the respective data
         """
-        start_dates, propagation_times = zip(*map(
+        start_dates, flood_wave_data = zip(*map(
             lambda wave:
-            (pd.to_datetime(wave[0][1]),
-             (pd.to_datetime(wave[-1][1]) - pd.to_datetime(wave[0][1])).days),
+                (pd.to_datetime(wave[0][1]),
+                 (pd.to_datetime(wave[-1][1]) - pd.to_datetime(wave[0][1])).days),
             flood_waves
         ))
 
-        df = pd.DataFrame({
-            'date': start_dates,
-            f'{statistic} propagation time': propagation_times
-        }).set_index('date')
+        return StatCalculator.get_edge_level_stat(
+            start_dates=start_dates,
+            edge_info='propagation time',
+            stat_data=flood_wave_data,
+            statistic=statistic,
+            is_aggregated=is_aggregated)
 
-        if is_aggregated:
-            return StatCalculator.get_period_stats(
-                df=df,
-                statistic=statistic
-            )
-        else:
-            return {"total": df}
+    @staticmethod
+    def get_slope_stat(fwg: nx.DiGraph,
+                       statistic: str = 'mean',
+                       is_aggregated: bool = True) -> dict:
+        """
+        Calculates selected statistic of slopes from the extracted subgraph,
+        aggregated yearly and quarterly.
+        :param nx.DiGraph fwg: extracted subgraph
+        :param str statistic: the statistic to calculate (mean, median, etc.)
+        :param bool is_aggregated: whether to aggregate by the statistic
+        :return dict: keys are frequencies, values are the respective data
+        """
+        start_dates, slope_data = zip(*map(
+            lambda edge_w_data:
+            (pd.to_datetime(edge_w_data[0][1]),
+             edge_w_data[2].get("slope")),
+            fwg.edges(data=True)
+        ))
+
+        return StatCalculator.get_edge_level_stat(
+            start_dates=start_dates,
+            edge_info='slope',
+            stat_data=slope_data,
+            statistic=statistic,
+            is_aggregated=is_aggregated)

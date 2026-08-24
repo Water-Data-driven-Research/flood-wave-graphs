@@ -21,8 +21,8 @@ class FloodMapCreator:
 
     def run(self) -> nx.DiGraph:
         """
-        Creates a flood map (only containing those flood waves that went from
-        one boundary station to another).
+        Run function, creates a flood map (only containing those flood waves
+        that went all the way from one boundary station to another).
         :return nx.DiGraph: the created flood map
         """
         flood_map = nx.DiGraph()

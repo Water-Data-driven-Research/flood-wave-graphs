@@ -19,7 +19,7 @@ class FloodMapCreator:
         self.floods_waves = flood_wave_if.flood_waves
         self.stations = stations
 
-    def create_flood_map(self) -> nx.DiGraph:
+    def run(self) -> nx.DiGraph:
         """
         Creates a flood map (only containing those flood waves that went from
         one boundary station to another).

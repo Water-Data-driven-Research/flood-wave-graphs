@@ -13,7 +13,7 @@ class FloodMapCreator:
         """
         Constructor.
         :param FloodWaveInterface flood_wave_if: contains the flood waves to
-               be mapped.
+               be mapped
         :param list stations: the boundary stations between river sections
         """
         self.floods_waves = flood_wave_if.flood_waves

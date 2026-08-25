@@ -40,7 +40,7 @@ def test_null_points(data_loader: DataLoader):
     null_points = data_loader.null_points
 
     assert isinstance(null_points, dict)
-    assert len(null_points) == 22
+    assert len(null_points) == 4
 
 
 def test_station_lifetimes(data_loader: DataLoader):

@@ -19,32 +19,32 @@ def test_measurement_data(data_loader: DataLoader):
     df = data_loader.measurement_data
 
     assert isinstance(df, pd.DataFrame)
-    assert df.shape == (52595, 22)
+    assert df.shape == (14610, 4)
 
 
 def test_meta_data(data_loader: DataLoader):
     df = data_loader.meta_data
 
     assert isinstance(df, pd.DataFrame)
-    assert df.shape == (22, 4)
+    assert df.shape == (4, 4)
 
 
 def test_level_groups(data_loader: DataLoader):
     level_groups = data_loader.level_groups
 
     assert isinstance(level_groups, dict)
-    assert len(level_groups) == 22
+    assert len(level_groups) == 4
 
 
 def test_null_points(data_loader: DataLoader):
     null_points = data_loader.null_points
 
     assert isinstance(null_points, dict)
-    assert len(null_points) == 22
+    assert len(null_points) == 4
 
 
 def test_station_lifetimes(data_loader: DataLoader):
     station_lifetimes = data_loader.station_lifetimes
 
     assert isinstance(station_lifetimes, dict)
-    assert len(station_lifetimes) == 22
+    assert len(station_lifetimes) == 4

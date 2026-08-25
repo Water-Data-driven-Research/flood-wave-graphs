@@ -26,7 +26,7 @@ def test_meta_data(data_loader: DataLoader):
     df = data_loader.meta_data
 
     assert isinstance(df, pd.DataFrame)
-    assert df.shape == (22, 4)
+    assert df.shape == (4, 4)
 
 
 def test_level_groups(data_loader: DataLoader):

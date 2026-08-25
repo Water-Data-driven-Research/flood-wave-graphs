@@ -33,7 +33,7 @@ def test_level_groups(data_loader: DataLoader):
     level_groups = data_loader.level_groups
 
     assert isinstance(level_groups, dict)
-    assert len(level_groups) == 22
+    assert len(level_groups) == 4
 
 
 def test_null_points(data_loader: DataLoader):

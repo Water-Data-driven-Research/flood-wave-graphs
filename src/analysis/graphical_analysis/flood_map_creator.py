@@ -17,7 +17,7 @@ class FloodMapCreator:
         :param list stations: the boundary stations between river sections
         """
         self.flood_waves = flood_wave_if.flood_waves
-        self.stations = stations
+        self.stations = sorted(stations)
 
     def run(self) -> nx.DiGraph:
         """

@@ -16,7 +16,7 @@ class FloodMapCreator:
                be mapped
         :param list stations: the boundary stations between river sections
         """
-        self.floods_waves = flood_wave_if.flood_waves
+        self.flood_waves = flood_wave_if.flood_waves
         self.stations = stations
 
     def run(self) -> nx.DiGraph:
@@ -40,7 +40,7 @@ class FloodMapCreator:
         edges = []
 
         for start, end in zip(self.stations[:-1], self.stations[1:]):
-            found_edges = [[fw[0], fw[-1]] for fw in self.floods_waves
+            found_edges = [[fw[0], fw[-1]] for fw in self.flood_waves
                            if fw[0][0] == str(start) and fw[-1][0] == str(end)]
             edges.extend(found_edges)
 

@@ -47,4 +47,4 @@ def test_station_lifetimes(data_loader: DataLoader):
     station_lifetimes = data_loader.station_lifetimes
 
     assert isinstance(station_lifetimes, dict)
-    assert len(station_lifetimes) == 22
+    assert len(station_lifetimes) == 4

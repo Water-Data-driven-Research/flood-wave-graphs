@@ -8,14 +8,16 @@ class DataDownloader(DataDownloaderBase):
     """
     This class is for downloading the input data from Google Drive.
     """
-    def __init__(self, folder_link: str):
+    def __init__(self, folder_link: str, data_folder_path: str = None):
         """
-        Constructor.
+        Constructor. If no data folder path is given, the path will be the
+        following: os.path.join(ROOT_DIR, 'data').
         :param str folder_link: the link to the folder in Google Drive
+        :param str data_folder_path: the desired path of the data folder
         """
         super().__init__(
             folder_link=folder_link,
-            data_folder_path=os.path.join(ROOT_DIR, 'data')
+            data_folder_path=data_folder_path
         )
 
         self.download_input_data()

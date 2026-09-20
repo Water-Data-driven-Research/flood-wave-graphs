@@ -58,7 +58,7 @@ class DataHandler:
         :return pd.Series: the null-corrected series
         """
         null_corrected_series = series + null_point * 100
-        return null_corrected_series
+        return null_corrected_series.round(decimals=2)
 
     @staticmethod
     def get_station_info(data_loader: DataLoader, gauges: list) -> dict:

@@ -101,8 +101,9 @@ class DeltaPeakFinder:
         null_point = station_info[gauge]['null_point']
         level_group = station_info[gauge]['level_group']
 
-        null_corrected_series = peak_series.apply(
-            lambda value: round(value + null_point * 100, 2)
+        null_corrected_series = DataHandler.get_null_corrected_series(
+            null_point=null_point,
+            series=peak_series
         )
         color_values = peak_series.apply(
             lambda value: 'yellow' if value < level_group else 'red'

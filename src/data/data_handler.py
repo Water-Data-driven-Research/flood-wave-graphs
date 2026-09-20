@@ -48,6 +48,19 @@ class DataHandler:
         self.data_if = DataInterface(data=data)
 
     @staticmethod
+    def get_null_corrected_series(null_point: float,
+                                  series: pd.Series) -> pd.Series:
+        """
+        Returns the series with values that are null-corrected, that is, values
+        that are measured not relative to the gauge but in absolute sea level.
+        :param float null_point: gauge height above the Baltic Sea (sea level)
+        :param pd.Series series: the series to null-correct
+        :return pd.Series: the null-corrected series
+        """
+        null_corrected_series = series + null_point * 100
+        return null_corrected_series
+
+    @staticmethod
     def get_station_info(data_loader: DataLoader, gauges: list) -> dict:
         """
         We create a dictionary by combining dictionaries.

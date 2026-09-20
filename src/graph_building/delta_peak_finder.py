@@ -1,5 +1,6 @@
 import pandas as pd
 
+from src.data.data_handler import DataHandler
 from src.data.interfaces.data_interface import DataInterface
 from src.graph_building.interfaces.vertex_data_interface import VertexDataInterface
 

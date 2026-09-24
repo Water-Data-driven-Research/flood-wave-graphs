@@ -1,5 +1,6 @@
 import pandas as pd
 
+from src.data.data_handler import DataHandler
 from src.data.interfaces.data_interface import DataInterface
 from src.graph_building.interfaces.vertex_data_interface import VertexDataInterface
 
@@ -100,9 +101,10 @@ class DeltaPeakFinder:
         null_point = station_info[gauge]['null_point']
         level_group = station_info[gauge]['level_group']
 
-        null_corrected_series = peak_series.apply(
-            lambda value: round(value + null_point * 100, 2)
-        )
+        null_corrected_series = (DataHandler.get_null_corrected_series(
+            null_point=null_point,
+            series=peak_series
+        ) * 100).round(decimals=2)
         color_values = peak_series.apply(
             lambda value: 'yellow' if value < level_group else 'red'
         )

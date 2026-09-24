@@ -104,7 +104,7 @@ class DeltaPeakFinder:
         null_corrected_series = DataHandler.get_null_corrected_series(
             null_point=null_point,
             series=peak_series
-        )
+        ) * 100
         color_values = peak_series.apply(
             lambda value: 'yellow' if value < level_group else 'red'
         )

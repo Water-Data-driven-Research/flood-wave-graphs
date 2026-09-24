@@ -52,12 +52,13 @@ class DataHandler:
                                   series: pd.Series) -> pd.Series:
         """
         Returns the series with values that are null-corrected, that is, values
-        that are measured not relative to the gauge but in absolute sea level.
-        :param float null_point: gauge height above the Baltic Sea (sea level)
-        :param pd.Series series: the series to null-correct
-        :return pd.Series: the null-corrected series
+        that are measured not relative to the gauge but in absolute sea level
+        (in meters above the Baltic Sea).
+        :param float null_point: gauge height above the Baltic Sea
+        :param pd.Series series: the series to null-correct (values in cm)
+        :return pd.Series: the null-corrected series (sea level in meters)
         """
-        null_corrected_series = series + null_point * 100
+        null_corrected_series = series / 100 + null_point
         return null_corrected_series.round(decimals=2)
 
     @staticmethod

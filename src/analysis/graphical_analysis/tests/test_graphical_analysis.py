@@ -81,7 +81,9 @@ def reduced_fwg(mock_flood_wave_if: FloodWaveInterface,
 
 
 @pytest.mark.parametrize('expected_edges', [
-    [(('13.0', '1990-01-10'), ('6.0', '1990-01-14')),
+    [(('13.0', '1989-12-23'), ('6.0', '1989-12-27')),
+     (('6.0', '1989-12-27'), ('1.0', '1989-12-31')),
+     (('13.0', '1990-01-10'), ('6.0', '1990-01-14')),
      (('6.0', '1990-02-15'), ('1.0', '1990-02-20'))]
 ])
 def test_reduced_fwg_edges(reduced_fwg: nx.DiGraph, expected_edges: list):

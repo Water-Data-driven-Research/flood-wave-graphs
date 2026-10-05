@@ -5,9 +5,11 @@ from src.graph_manipulation.interfaces.flood_wave_interface import (
 )
 
 
-class FloodMapCreator:
+class ReducedFWGCreator:
     """
-    This class constructs a simplified (weighted) graph between given stations.
+    This class constructs a reduced flood wave graph between given boundary
+    stations, whose nodes are delta peaks, and whose edges are those flood
+    waves that made it all the way between two neighboring boundary stations.
     """
     def __init__(self, flood_wave_if: FloodWaveInterface, stations: list):
         """
@@ -25,11 +27,11 @@ class FloodMapCreator:
         that went all the way from one boundary station to another).
         :return nx.DiGraph: the created flood map
         """
-        flood_map = nx.DiGraph()
+        reduced_fwg = nx.DiGraph()
         edges = self.find_edges()
 
-        flood_map.add_edges_from(ebunch_to_add=edges)
-        return flood_map
+        reduced_fwg.add_edges_from(ebunch_to_add=edges)
+        return reduced_fwg
 
     def find_edges(self) -> list:
         """

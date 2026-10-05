@@ -42,8 +42,13 @@ class ReducedFWGCreator:
         edges = []
 
         for start, end in zip(self.stations[:-1], self.stations[1:]):
-            found_edges = [[fw[0], fw[-1]] for fw in self.flood_waves
-                           if fw[0][0] == str(start) and fw[-1][0] == str(end)]
+            found_edges = []
+            for fw in self.flood_waves:
+                station_list = [station for station, date in fw]
+                if str(start) in station_list and str(end) in station_list:
+                    start_node = fw[station_list.index(str(start))]
+                    end_node = fw[station_list.index(str(end))]
+                    found_edges.append([start_node, end_node])
             edges.extend(found_edges)
 
         return edges

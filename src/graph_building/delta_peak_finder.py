@@ -25,16 +25,20 @@ class DeltaPeakFinder:
 
         self.vertex_interface = VertexDataInterface()
 
-    def run(self):
+    def run(self, symmetric_formation: bool = False):
         """
         Finds and stores delta-peaks alongside gauge distances.
+        :param bool symmetric_formation: whether the delta peaks should be
+                                         created symmetrically or not
         """
         gauges = self.data_interface.gauges
 
         vertices = dict()
         for gauge in gauges:
             series = self.get_series(gauge=gauge)
-            peak_series = self.get_peak_series(series=series)
+            peak_series = self.get_peak_series(
+                series=series, symmetric_formation=symmetric_formation
+            )
 
             vertices[gauge] = self.get_peak_data(
                 gauge=gauge,
@@ -65,10 +69,13 @@ class DeltaPeakFinder:
 
         return series
 
-    def get_peak_series(self, series: pd.Series) -> pd.Series:
+    def get_peak_series(self, series: pd.Series,
+                        symmetric_formation: bool = False) -> pd.Series:
         """
         We find the delta-peaks, and return the filtered series.
         :param pd.Series series: the original time series
+        :param bool symmetric_formation: whether the delta peaks should be
+                                         created symmetrically or not
         :return pd.Series: found delta-peaks
         """
         before_max = series.rolling(
@@ -81,7 +88,9 @@ class DeltaPeakFinder:
             min_periods=self.delta
         ).max().shift(periods=1)[::-1]
 
-        cond_before = series > before_max
+        cond_before = (series >= before_max
+                       if symmetric_formation
+                       else series > before_max)
         cond_after = series >= after_max
 
         is_peak = cond_before & cond_after

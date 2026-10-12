@@ -14,8 +14,7 @@ class GraphBuilder:
                  data_interface: DataInterface,
                  delta: int = 2,
                  beta: int = 2,
-                 alpha: int = 1,
-                 ):
+                 alpha: int = 1):
         """
         Constructor.
         :param DataInterface data_interface: the DataInterface instance containing required data
@@ -42,12 +41,18 @@ class GraphBuilder:
 
         self.fwg_interface: FWGInterface = None
 
-    def run(self):
+    def run(self, symmetric_peak_formation: bool = False):
         """
         Runs the operations for building the graph.
+        :param bool symmetric_peak_formation: whether the delta peaks should be
+                                              created symmetrically or not
         """
-        self.delta_peak_finder.run()
-        self.edge_finder.run(vertex_interface=self.delta_peak_finder.vertex_interface)
+        self.delta_peak_finder.run(
+            symmetric_formation=symmetric_peak_formation
+        )
+        self.edge_finder.run(
+            vertex_interface=self.delta_peak_finder.vertex_interface
+        )
 
         fwg = self.build_graph()
         self.fwg_interface = FWGInterface(fwg=fwg)
